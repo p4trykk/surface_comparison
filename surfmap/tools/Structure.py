@@ -250,7 +250,7 @@ def parsePDBParticule(filin, charge = 1, infile = False) :
     # parcoure le PDB   
     for line in lines :
         if (line[0:4] == "ATOM") or ((line[0:6] == "HETATM") and ( (line[17:20].strip() == "MET") or  (line[17:20].strip() == "MSE") )) :
-            numpart = line[7:11].strip()
+            numpart = line[7:11].strip() # numpart = line[7:11].strip()
             dPDB["partlist"].append(numpart)
             dPDB[numpart] = {}
             dPDB[numpart]["x"] = float(line[30:38])

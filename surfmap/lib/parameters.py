@@ -10,7 +10,7 @@ from surfmap import PATH_R_SCRIPTS, __COPYRIGHT_NOTICE__
 def get_args():
     parser = argparse.ArgumentParser()
     group_mutually_exclusive = parser.add_mutually_exclusive_group(required=True)
-    
+
     group_mutually_exclusive.add_argument(
         "-pdb",
         help="Path to a PDB file"
@@ -43,7 +43,6 @@ def get_args():
         help="Type of projection. Accepted projection types are: flamsteed, mollweide, lambert. Defaults to flamsteed."
     )
 
-
     parser.add_argument(
         "-coords",
         default=None,
@@ -70,7 +69,7 @@ def get_args():
         required=False,
         type=str,
         default="output_SURFMAP_{}_{}",
-        help = "Path to the output directory. Defaults to './output_SURFMAP_$pdb_$tomap' with $pdb and $tomap based on -pdb and -tomap given values"
+        help="Path to the output directory. Defaults to './output_SURFMAP_$pdb_$tomap' with $pdb and $tomap based on -pdb and -tomap given values"
     )
 
     parser.add_argument(
@@ -87,6 +86,25 @@ def get_args():
         type=float,
         default=None,
         help="Maximum value to be used for the electrostatics color scale. The value will be converted as an absolute value to make the scale symetric around 0. For instance, a value of 5.63 will scale the electrosctatics color values from -5.63 to 5.63."
+    )
+
+    parser.add_argument(
+        "--elec-norm-min",
+        required=False,
+        type=float,
+        default=None,
+    )
+
+    parser.add_argument(
+        "--elec-norm-max",
+        required=False,
+        type=float,
+        default=None,
+    )
+
+    parser.add_argument(
+        "--elec-normalize",
+        action="store_true",
     )
 
     parser.add_argument(
@@ -112,9 +130,27 @@ def get_args():
     )
 
     parser.add_argument(
+        "--bfactor-normalize",
+        action="store_true",
+        help="Normalize bfactor values to [-1,1] based on the effective bfactor min/max used for map scaling."
+    )
+
+    parser.add_argument(
+        "--flat-bfactor-map",
+        action="store_true",
+        help="Generate a 2D bfactor map directly from PDB x/y coordinates (no spherical shell/projection). Intended for flat structures."
+    )
+
+    parser.add_argument(
         "--png",
-        action="store_true", 
+        action="store_true",
         help="If chosen, a map in PNG format is computed instead of the default PDF."
+    )
+
+    parser.add_argument(
+        "--clean-map",
+        action="store_true",
+        help="If chosen, an additional analysis-ready PNG is generated with only the map pixels (no title, axes, legend, or residue annotations). This is useful for pixel-wise comparison between proteins."
     )
 
     parser.add_argument(
@@ -138,6 +174,14 @@ def get_args():
     )
 
     parser.add_argument(
+        "-emask", "--electrostatics-mask",
+        required=False,
+        type=str,
+        default=None,
+        help="path to a residue mask file"
+    )
+
+    parser.add_argument(
         "-ff",
         required=False,
         type=str,
@@ -152,8 +196,8 @@ def get_args():
         default=1,
         help="Verbose level of the console log. 0 for silence, 1 for info level, 2 for debug level. Defaults to 1."
     )
-    
-    if True in [ x in ["-v", "--version"] for x in sys.argv[1:] ]:
+
+    if True in [x in ["-v", "--version"] for x in sys.argv[1:]]:
         print(f"{__COPYRIGHT_NOTICE__}")
         exit()
 
@@ -161,11 +205,11 @@ def get_args():
 
 
 class Parameters:
-    """Class handler for parameters of surfmap 
-    
+    """Class handler for parameters of surfmap
+
     Attributes are:
     - curdir: Union[str, Path]  # current working directory
-    - surftool_script: str  # path to binary _surfmap_tool 
+    - surftool_script: str  # path to binary _surfmap_tool
     - shell_script: str  # path to compute_shell.sh
     - coords_script: str  # path to computeCoordList.sh
     - matrix_script: str  # path to computeMatrices.sh
@@ -182,6 +226,7 @@ class Parameters:
     - elec_max_value: str  # Maximum absolute color value to be used for the electrostatics color scale definition (e.g. 6.3)
     - bfactor_min_value: str  # Minimum bfactor value to be used for the bfactor color scale
     - bfactor_max_value: str  # Maximum bfactor value to be used for the bfactor color scale
+    - bfactor_normalize: bool=False  # normalize bfactor values to [-1,1] for plotting.
     - coordstomap: Any = None  #
     - nosmooth: bool  # True to have map not smoothed (for discrete values only)
     - png: bool  # True to generate a PNG file of the map in addition to the usual PDF
@@ -195,7 +240,8 @@ class Parameters:
     """
     REQUIREMENTS = ["R", "awk", "apbs"]
 
-    ALLOWED_PROPERTIES = ["all", "stickiness", "kyte_doolittle", "wimley_white", "electrostatics", "circular_variance", "circular_variance_atom", "bfactor", "binding_sites"]
+    ALLOWED_PROPERTIES = ["all", "stickiness", "kyte_doolittle", "wimley_white", "electrostatics", "circular_variance",
+                          "circular_variance_atom", "bfactor", "binding_sites"]
     PROPERTIES = {"all": ["kyte_doolittle", "stickiness", "wimley_white", "circular_variance"]}
 
     ALLOWED_PROJECTION = ["flamsteed", "mollweide", "lambert"]
@@ -209,9 +255,16 @@ class Parameters:
         2: 10,
         3: 5,
     }
-    
+
     def __init__(self, args: Union[argparse.Namespace, object], path_to_scripts: Union[str, Path]=PATH_R_SCRIPTS) -> None:
         self.args = args
+        self.elec_max_value = None
+        self.elec_norm_min = None
+        self.elec_norm_max = None
+        self.elec_normalize = False
+        self.bfactor_min_value = None
+        self.bfactor_max_value = None
+        self.bfactor_normalize = False
 
         if not args.docker:
             self._check_surfmap_requirements()
@@ -237,7 +290,7 @@ class Parameters:
         self.curdir: Union[str, Path] = Path.cwd()
         self.surftool_script: str = "_surfmap_tool"
         self.shell_script: str = str(Path(path_to_scripts) / "compute_shell.sh")
-        self.coords_script: str  = str(Path(path_to_scripts) / "computeCoordList.R")
+        self.coords_script: str = str(Path(path_to_scripts) / "computeCoordList.R")
         self.matrix_script: str = str(Path(path_to_scripts) / "computeMatrices.R")
         self.map_script: str = str(Path(path_to_scripts) / "computeMaps.R")
 
@@ -258,6 +311,16 @@ class Parameters:
         # define optional pqr file (optionally used for electrostatics only)
         self.pqr: str = args.pqr
 
+        # define optional residue mask file used only for electrostatics mapping
+        self.electrostatics_mask: str = args.electrostatics_mask if self.ppttomap == "electrostatics" else None
+        if args.electrostatics_mask and self.ppttomap != "electrostatics":
+            print(
+                "Warning: option --electrostatics-mask is only used with '-tomap electrostatics'. The mask will be ignored.")
+        if self.electrostatics_mask and not Path(self.electrostatics_mask).exists():
+            print(
+                "The electrostatics mask file could not be found. It seems that this file does not exist.\nThis could be due to a mistake in the path to the file.\nExiting now.")
+            exit()
+
         # define the force-field used for atomis parameters (optionally used for electrostatics only)
         if str(args.ff).upper() not in self.PDB2PQR_FORCE_FIELDS:
             print(f"Error, the force field {args.ff} is not accepted.")
@@ -268,13 +331,14 @@ class Parameters:
         # define residues to map, if any
         self.resfile: str = args.res
         if self.resfile and not Path(self.resfile).exists():
-            print("The residue file could not be found (arg -res). It seems that this file does not exist.\nThis could be due to a mistake in the path to the file.\nExiting now.")
+            print(
+                "The residue file could not be found (arg -res). It seems that this file does not exist.\nThis could be due to a mistake in the path to the file.\nExiting now.")
             exit()
 
         # define radius in angström added to usual atomic radius (used for calculation solvent excluded surface)
         self.rad: float = args.rad
         self._check_rad()
-        
+
         # define cellsize of the map
         self.cellsize: int = args.s
         self._check_cellsize()
@@ -283,15 +347,39 @@ class Parameters:
         self.coordstomap: Any = args.coords
 
         # define min/max color value to be used for electrostatics/bfactor color scale
-        self.elec_max_value: Any = args.elec_max_value if self.ppttomap == "electrostatics" else None
-        self.bfactor_min_value: Any = args.bfactor_min_value if self.ppttomap == "bfactor" else None
-        self.bfactor_max_value: Any = args.bfactor_max_value if self.ppttomap == "bfactor" else None
+        self.elec_max_value: Any = getattr(args, "elec_max_value", None) if self.ppttomap == "electrostatics" else None
+        self.elec_norm_min: Any = getattr(args, "elec_norm_min", None) if self.ppttomap == "electrostatics" else None
+        self.elec_norm_max: Any = getattr(args, "elec_norm_max", None) if self.ppttomap == "electrostatics" else None
+        self.elec_normalize: bool = getattr(args, "elec_normalize", False) if self.ppttomap == "electrostatics" else False
+        if (self.elec_norm_min is None) != (self.elec_norm_max is None):
+            print("Error: --elec-norm-min and --elec-norm-max must be provided together.\nExiting now.")
+            exit(1)
+        if self.elec_norm_min is not None and self.elec_norm_max is not None and self.elec_norm_max <= self.elec_norm_min:
+            print("Error: --elec-norm-max must be greater than --elec-norm-min.\nExiting now.")
+            exit(1)
+        if self.elec_normalize and self.elec_max_value is None and self.elec_norm_min is None:
+            print("Error: --elec-normalize requires --elec-max-value or --elec-norm-min/--elec-norm-max.\nExiting now.")
+            exit(1)
+        if self.elec_normalize and self.elec_max_value is not None and abs(self.elec_max_value) == 0:
+            print("Error: --elec-max-value cannot be 0 when --elec-normalize is used.\nExiting now.")
+            exit(1)
+
+        self.bfactor_min_value: Any = getattr(args, "bfactor_min_value", None) if self.ppttomap == "bfactor" else None
+        self.bfactor_max_value: Any = getattr(args, "bfactor_max_value", None) if self.ppttomap == "bfactor" else None
+        self.bfactor_normalize: bool = getattr(args, "bfactor_normalize",
+                                               False) if self.ppttomap == "bfactor" else False
+        self.flat_bfactor_map: bool = getattr(args, "flat_bfactor_map", False) if self.ppttomap == "bfactor" else False
+        if getattr(args, "bfactor_normalize", False) and self.ppttomap != "bfactor":
+            print("Warning: option --bfactor-normalize is only used with '-tomap bfactor'. The option will be ignored.")
+        if getattr(args, "flat_bfactor_map", False) and self.ppttomap != "bfactor":
+            print("Warning: option --flat-bfactor-map is only used with '-tomap bfactor'. The option will be ignored.")
 
         self.nosmooth: bool = args.nosmooth
         self.png: bool = args.png
         self.keep: bool = args.keep
+        self.clean_map: bool = args.clean_map
         self.docker: bool = args.docker
-        
+
         # define and create output directory if not exists
         self.DEFAULT_OUTDIR_BASENAME = "output_SURFMAP_{}_{}"
         self._set_outdir(args=args)
@@ -314,24 +402,26 @@ class Parameters:
                 continue
             if not which(requirement):
                 exe_not_found.append(requirement)
-            
+
         if exe_not_found:
-            print(f"\nError: the following executable(s) required to run SURFMAP has(ve) not been detected on your system: {', '.join(exe_not_found)}.\nPlease install the missing executable(s).\n")
-            print(f"If you think that an executable is present on your system but is detected as missing, please make sure to make it accessible no matter the current directory. It can be done by setting your search path (export PATH=$PATH:/...)\n")
+            print(
+                f"\nError: the following executable(s) required to run SURFMAP has(ve) not been detected on your system: {', '.join(exe_not_found)}.\nPlease install the missing executable(s).\n")
+            print(
+                f"If you think that an executable is present on your system but is detected as missing, please make sure to make it accessible no matter the current directory. It can be done by setting your search path (export PATH=$PATH:/...)\n")
             exit()
 
-    
     def _check_docker_install(self):
         if not which("docker"):
-            print(f"Error: docker has not been detected on your system. Please install it to use a pre-built image of SURFMAP.\n")
-
+            print(
+                f"Error: docker has not been detected on your system. Please install it to use a pre-built image of SURFMAP.\n")
 
     def _check_mutually_exclusive_args(self, args):
         if not args.pdb and not args.mat:
             print("You need to provide either a pdb file or a matrix file in input.\nexiting now.")
             exit()
         elif args.pdb and args.mat:
-            print("You need to provide either a pdb file or a matrix file in input. you cannot provide both.\nexiting now.")
+            print(
+                "You need to provide either a pdb file or a matrix file in input. you cannot provide both.\nexiting now.")
             exit()
 
     def _check_pdbarg(self):
@@ -339,20 +429,24 @@ class Parameters:
             print("Error: the pdb file {} does not exist".format(self.pdbarg))
             exit()
         if Path(self.pdbarg).suffix != ".pdb":
-            print("The file provided in input seems to not be a pdb file. Please provide a file with a '.pdb' extension.")
+            print(
+                "The file provided in input seems to not be a pdb file. Please provide a file with a '.pdb' extension.")
             exit()
 
     def _check_rad(self):
         if not 10.0 >= self.rad >= 0.5:
-            print("The radius given in input (arg -rad) is either too large or too small. Please provide a number between 0.5 and 10.\nExiting now.")
+            print(
+                "The radius given in input (arg -rad) is either too large or too small. Please provide a number between 0.5 and 10.\nExiting now.")
             exit()
 
     def _check_cellsize(self):
         if 180 % self.cellsize != 0:
-            print("cellsize (arg -s) is not a multiplier of 180.\nThe cell size needs to be a multiplier of 180 in order to compute the grid. \nExiting now.")
+            print(
+                "cellsize (arg -s) is not a multiplier of 180.\nThe cell size needs to be a multiplier of 180 in order to compute the grid. \nExiting now.")
             exit()
         elif self.cellsize > 20:
-            print("the cellsize is too large (arg -s).\nThe maximum cell size authorized is 20, which represents a 9*18 squares grid. \nExiting now.")
+            print(
+                "the cellsize is too large (arg -s).\nThe maximum cell size authorized is 20, which represents a 9*18 squares grid. \nExiting now.")
             exit()
 
     def _set_outdir(self, args):
@@ -366,46 +460,38 @@ class Parameters:
             self.outdir: Union[str, Path] = args.d.format(*names)
 
         Path(self.outdir).mkdir(parents=True, exist_ok=True)
-                
-    def get_log_parameters(self):
-        return """
-Parameters used to compute the maps:
-- PDB file (-pdb): {}
-- Matrix file (-mat): {}
-- Projection type (-proj): {}
-- PQR file: {}
-- Name of the property mapped (-ppttomap): {} 
-- Filename of residues to map (-resfile): {}
-- MSMS radius used for shell computation (-rad): {}
-- Unit size of the grid cell (-s): {}
-- Grid resolution: {}
-- Max absolute value for electrostatics color scale: {}
-- Min value for bfactor color scale: {}
-- Max value for bfactor color scale: {}
-- Map not smoothed (--nosmooth): {}
-- Generate png (--png): {}
-- Keep intermediary files (--keep): {}
-- Output directory (-outdir): {}
-    """.format(
-        self.pdbarg if self.pdbarg else "None",
-        self.mat if self.mat else "None",
-        self.proj,
-        self.pqr if self.pqr else "None",
-        self.ppttomap if self.ppttomap != "all" else ", ".join(self.PROPERTIES["all"]),
-        self.resfile if self.resfile else "None",
-        self.rad,
-        self.cellsize,
-        f"{int(360 / self.cellsize)}*{int(180 / self.cellsize)}",
-        self.elec_max_value if self.elec_max_value is not None else "None",
-        self.bfactor_min_value if self.bfactor_min_value is not None else "None",
-        self.bfactor_max_value if self.bfactor_max_value is not None else "None",
-        self.nosmooth,
-        self.png,
-        self.keep,
-        self.outdir
-    )
 
-    def write_parameters(self, filename: str, outdir: Union[str, Path]=None):
+    def get_log_parameters(self):
+        rows = [
+            "Parameters used to compute the maps:",
+            f"- PDB file (-pdb): {self.pdbarg if self.pdbarg else 'None'}",
+            f"- Matrix file (-mat): {self.mat if self.mat else 'None'}",
+            f"- Projection type (-proj): {self.proj}",
+            f"- PQR file: {self.pqr if self.pqr else 'None'}",
+            f"- Electrostatics mask file: {self.electrostatics_mask if self.electrostatics_mask else 'None'}",
+            f"- Flat-structure electrostatics fallback (--flat-structure): {self.flat_structure}",
+            f"- Name of the property mapped (-ppttomap): {self.ppttomap if self.ppttomap != 'all' else ', '.join(self.PROPERTIES['all'])}",
+            f"- Filename of residues to map (-resfile): {self.resfile if self.resfile else 'None'}",
+            f"- MSMS radius used for shell computation (-rad): {self.rad}",
+            f"- Unit size of the grid cell (-s): {self.cellsize}",
+            f"- Grid resolution: {int(360 / self.cellsize)}*{int(180 / self.cellsize)}",
+            f"- Max absolute value for electrostatics color scale: {self.elec_max_value if self.elec_max_value is not None else 'None'}",
+            f"- Electrostatics normalization min (--elec-norm-min): {self.elec_norm_min if self.elec_norm_min is not None else 'None'}",
+            f"- Electrostatics normalization max (--elec-norm-max): {self.elec_norm_max if self.elec_norm_max is not None else 'None'}",
+            f"- Normalize electrostatics scale to [-1,1] (--elec-normalize): {self.elec_normalize}",
+            f"- Min value for bfactor color scale: {self.bfactor_min_value if self.bfactor_min_value is not None else 'None'}",
+            f"- Max value for bfactor color scale: {self.bfactor_max_value if self.bfactor_max_value is not None else 'None'}",
+            f"- Normalize bfactor scale to [-1,1] (--bfactor-normalize): {self.bfactor_normalize}",
+            f"- Map not smoothed (--nosmooth): {self.nosmooth}",
+            f"- Generate png (--png): {self.png}",
+            f"- Generate clean analysis-ready map (--clean-map): {self.clean_map}",
+            f"- Keep intermediary files (--keep): {self.keep}",
+            f"- Output directory (-outdir): {self.outdir}",
+        ]
+        return "\n".join(rows) + "\n"
+
+
+def write_parameters(self, filename: str, outdir: Union[str, Path] = None):
         outdir = Path(self.outdir) if not outdir else Path(outdir)
         out_filename = outdir / filename
 

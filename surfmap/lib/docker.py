@@ -10,7 +10,8 @@ class DockerCLI:
     DOCKER_REPOSITORY = 'lopesi2bc/surfmap'
     TAG = SURFMAP_DOCKER_VERSION
 
-    def __init__(self, args, input_args: List[str], output_args: str, out_dirname: str, input_dir: str='/home/surfmap/input', output_dir: str='/home/surfmap/output') -> None:
+    def __init__(self, args, input_args: List[str], output_args: str, out_dirname: str,
+                 input_dir: str = '/home/surfmap/input', output_dir: str = '/home/surfmap/output') -> None:
         self.cli = ['docker', 'run', '-it', '--rm']
 
         self.prog = Path(sys.argv[0]).name
@@ -19,7 +20,7 @@ class DockerCLI:
         self.input_dir = input_dir
         self.output_dir = output_dir
 
-        self.input_files = [ args.__getattribute__(x.replace("-", "")) for x in self.input_args]
+        self.input_files = [args.__getattribute__(x.lstrip("-").replace("-", "_")) for x in self.input_args]
         self.output = out_dirname
         Path(self.output).mkdir(exist_ok=True, parents=True)
 
@@ -32,7 +33,7 @@ class DockerCLI:
         mnt_point = []
         for input_file in self.input_files:
             mnt_point += ["-v", f"{Path(input_file).resolve()}:{self.input_dir}/{Path(input_file).name}"]
-        
+
         mnt_point += ["-v", f"{Path(self.output).resolve()}:{self.output_dir}:rw"]
 
         return mnt_point
@@ -57,7 +58,6 @@ class DockerCLI:
             cmd_arguments += [self.output_args, self.output_dir]
 
         return cmd_arguments
-
 
     def cmd(self):
         return " ".join(self.cli)

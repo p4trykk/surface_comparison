@@ -25,7 +25,7 @@ setuptools.setup(
     package_data={'surfmap': ['examples/*']},
     include_package_data=True,
     install_requires=[
-        "freesasa==2.1.0",
+        "freesasa==2.2.1",
         "numpy>=1.21.6",
         "pdb2pqr==3.1.0",
         "requests==2.22.0"

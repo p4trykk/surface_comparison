@@ -16,7 +16,7 @@ options(warn=-1)
 
 ###########################################################
 
-
+MASKED_SENTINEL <- -9999
 
 ################## FUNCTIONS ##########################
 
@@ -26,6 +26,9 @@ smoother_adj <- function(row, datamat) {
 
   abs = as.double(row[1])/width
   ord = as.double(row[2])/height
+  if (!is.na(row[3]) && as.double(row[3]) <= MASKED_SENTINEL) {
+    return(MASKED_SENTINEL)
+  }
   if ((ord != 1) & (ord != stepord) & (abs != 1) & (abs != stepabs)) {
     # Selecting adjacent cells in the matrix (rk: does not correspond to adjacent cells in the dataframe)
     adj_cells = c(datamat[(abs-2)*stepord+ord-1,3],datamat[(abs-2)*stepord+ord,3],
@@ -37,16 +40,18 @@ smoother_adj <- function(row, datamat) {
       smoothed_value = Inf
     } else {
       # Actual smoothing of the cell (ignoring NA values. Rk: for energy maps we considered NA as 0 values).
+      adj_cells = as.double(adj_cells)
+      adj_cells = adj_cells[adj_cells > MASKED_SENTINEL]
       if(opt$ipops) {
-        seq_case = c(as.double(row[3]), as.double(adj_cells))
+        seq_case = c(as.double(row[3]), adj_cells)
       
         #smoothed_value = mean(seq_case, na.rm=T)
         seq_case[is.na(seq_case)] <- 0
-        smoothed_value = mean(seq_case)
+        smoothed_value = ifelse(length(seq_case) == 0, MASKED_SENTINEL, mean(seq_case))
 
       } else {
       seq_case = c(row[3], adj_cells)
-      smoothed_value = mean(seq_case, na.rm=T)
+      smoothed_value = ifelse(length(seq_case) == 0, MASKED_SENTINEL, mean(seq_case, na.rm=T))
 
       }
     }  
@@ -61,6 +66,9 @@ smoother_raw <- function(row, datamat) {
 
   abs = as.double(row[1])/width
   ord = as.double(row[2])/height
+  if (!is.na(row[3]) && as.double(row[3]) <= MASKED_SENTINEL) {
+    return(MASKED_SENTINEL)
+  }
   if ((ord != 1) & (ord != stepord) & (abs != 1) & (abs != stepabs)) {
     # Selecting adjacent cells in the matrix (rk: does not correspond to adjacent cells in the dataframe)
     adj_cells = c(datamat[(abs-2)*stepord+ord-1,3],datamat[(abs-2)*stepord+ord,3],
@@ -72,6 +80,8 @@ smoother_raw <- function(row, datamat) {
       smoothed_value = Inf
     } else if (is.na(row[3]) == TRUE) { # The only case where the value of the cell is modified. We assign the most seen value in the neighbors.
       # Actual smoothing of the cell (ignoring NA values. Rk: for energy maps we considered NA as 0 values).
+      adj_cells = as.double(adj_cells)
+      adj_cells = adj_cells[adj_cells > MASKED_SENTINEL]
       seq_case = c(row[3], adj_cells)
       smoothed_value = mean(seq_case, na.rm=T)
       # First remove the NA from the vect of value
@@ -173,8 +183,8 @@ findborders <- function(Data) {
   blankproj[,1] = blankproj[,1] / proportion1
   blankproj[,2] = blankproj[,2] / proportion2
 
-  seqcol = seq(-180,180,by=width)
-  seqrow = seq(-90,90,by=height)
+  seqcol = seq(-180,180,by=width) #seqcol = seq(-180,180,by=width)
+  seqrow = seq(-90,90,by=height) #seqrow = seq(-90,90,by=height)
   
   # First using sapply to gather all coordinate belonging to a same pixel. Result is a list of list of dataframe/
   # First level list contain list of dataframe of elem belonging to a same column (for ex. all pixel of abscissa coords belonging to (80,90)). These element are grouped into dataframes.
@@ -221,12 +231,46 @@ comp_val_matrix <- function(Data) {
   
   # Calculating mean value for each cell.  
   names(datacells) <- n 
+  # Aggregate values per cell while preserving masking semantics:
+  # if all values are masked -> keep masked sentinel,
+  # otherwise compute mean/max on unmasked values only.
+  aggregate_cell_value <- function(values, mode_discrete=FALSE) {
+    vals <- as.double(values)
+
+    # If one particle in the cell belongs to a masked residue, mask the full cell.
+    if (any(vals <= MASKED_SENTINEL, na.rm=TRUE)) {
+      return(MASKED_SENTINEL)
+    }
+
+    unmasked <- vals[vals > MASKED_SENTINEL]
+
+    if (length(unmasked) == 0) {
+      return(MASKED_SENTINEL)
+    }
+
+    if (mode_discrete) {
+      return(max(unmasked))
+    }
+
+    return(mean(unmasked))
+  }
   if (opt$discrete) {
   datameancells = sapply(datacells, function(x) {nord = names(x);
-                   lapply(nord, function(y) {x[[y]][,3]=max(x[[y]][,3]); return(x[[y]][1,c(1:3)])})})
+                   lapply(nord, function(y) {
+                     x[[y]][,3]=aggregate_cell_value(x[[y]][,3], mode_discrete=TRUE)
+                     return(x[[y]][1,c(1:3)])
+                   })})
   } else if (opt$ipops){
     datameancells = sapply(datacells, function(x) {nord = names(x);
                    lapply(nord, function(y) {
+                          if (any(as.double(x[[y]][,3]) <= MASKED_SENTINEL)) {
+                            x[[y]][,3] = MASKED_SENTINEL
+                            return(x[[y]][1,c(1:3)])
+                          }
+
+                          # Ignore masked sentinels in iPOPS path.
+                          x[[y]] = x[[y]][which(as.double(x[[y]][,3]) > MASKED_SENTINEL),]
+
                           x[[y]][which(x[[y]][,3]>0),3] <- 0; 
                           limval = min(x[[y]][,3])+2.7;
                           x[[y]][,3] = mean(x[[y]][which(x[[y]][,3]<limval),3]); 
@@ -234,7 +278,10 @@ comp_val_matrix <- function(Data) {
                         })})
   } else {
   datameancells = sapply(datacells, function(x) {nord = names(x);
-                   lapply(nord, function(y) {x[[y]][,3]=mean(x[[y]][,3]); return(x[[y]][1,c(1:3)])})})
+                   lapply(nord, function(y) {
+                     x[[y]][,3]=aggregate_cell_value(x[[y]][,3], mode_discrete=FALSE)
+                     return(x[[y]][1,c(1:3)])
+                   })})
   }
   datameancells = unlist(datameancells, recursive = FALSE)
   datameancells = do.call(rbind, datameancells)
@@ -325,8 +372,8 @@ if (!is.na(opt$cellsize)) {
   width <<- 5
 }
 height <<- width
-stepabs <<- 360/width
-stepord <<- 180/width
+stepabs <<- 360/width #360
+stepord <<- 180/width #180
 
 if (180%%width != 0) {
   cat("\nError: Grid cell is not a multiple of 180:\nexiting now.\n\n")

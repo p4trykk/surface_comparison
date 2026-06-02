@@ -118,6 +118,8 @@ option_list = list(
               help="dimension of a grid cell. max is 180. please chose a multiple of 180. (default = 5)", metavar="character"),
   make_option(c("--png"), action="store_true", default = "FALSE",
               help="output file in png format (default = pdf)", metavar="character"),
+  make_option(c("--clean_map"), action="store_true", default = "FALSE",
+              help="generate an additional clean PNG with only map pixels (no axes/title/legend)", metavar="character"),
   make_option(c("--electrostatics"), action="store_true", default = "FALSE",
               help="use electrostatics scale", metavar="character"),
   make_option(c("--stickiness"), action="store_true", default = "FALSE",
@@ -144,10 +146,18 @@ option_list = list(
               help="Input suffix that is removed to to build basename of output files.", metavar="character"),
   make_option(c("--elec_max_value"), type="numeric", default=NULL, 
               help="Maximum absolute value to be used for the electrostatics color scale", metavar="character"),
+  make_option(c("--elec_norm_min"), type="numeric", default=NULL,
+              help="Global minimum electrostatics value used to normalize values to [-1,1]"),
+  make_option(c("--elec_norm_max"), type="numeric", default=NULL,
+              help="Global maximum electrostatics value used to normalize values to [-1,1]"),
+  make_option(c("--elec_normalize"), action="store_true", default = "FALSE",
+              help="Normalize electrostatics values to [-1,1] for plotting"),
   make_option(c("--bfactor_min_value"), type="numeric", default=NULL, 
               help="Minimum bfactor value to be used for the bfactor color scale", metavar="character"),
   make_option(c("--bfactor_max_value"), type="numeric", default=NULL, 
-              help="Maximum bfactor value to be used for the bfactor color scale", metavar="character")
+              help="Maximum bfactor value to be used for the bfactor color scale", metavar="character"),
+  make_option(c("--bfactor_normalize"), action="store_true", default = "FALSE",
+              help="Normalize bfactor values to [-1,1] using effective bfactor min/max")
 );
 
 opt_parser = OptionParser(option_list=option_list);
@@ -205,9 +215,10 @@ dir.create(outdir, showWarnings = FALSE)
 for (file in (1:length(files))) {
   name_prefix = gsub(opt$suffix, "", basename(files[file]))
   pdf_filename = file.path(outdir, paste0(name_prefix, "_map.pdf"))
+  clean_png_filename = file.path(outdir, paste0(name_prefix, "_map_clean.png"))
 
   if (opt$png == TRUE) {
-    png(gsub(".pdf", ".png", pdf_filename), res = 300, width = 17.78, height = 17.78, units = "cm")
+    png(gsub(".pdf", ".png", pdf_filename), res = 300, width = 17.78, height = 17.78, units = "cm") #before w i h: 17.78
   } else {
     pdf(pdf_filename)
   }
@@ -250,6 +261,7 @@ for (file in (1:length(files))) {
   data_matrix = read.table(files[file], fill = TRUE, header = TRUE, sep = "\t")
   data_matrix[is.na(data_matrix)] <- 0
   val_matrix = matrix(as.double(data_matrix[,3]),ncol = stepabs, nrow = stepord, byrow=FALSE)
+  masked_sentinel = -9999
 
   # The min value of the matrix correspond to the lowest energy value. Used for the scale
   # in the plot, which correspond to (0,-minE).
@@ -257,15 +269,35 @@ for (file in (1:length(files))) {
 
   if (opt$electrostatics == TRUE) { # electrostatics scale
     main_scale = "electrostatic potential distribution scale"
+# Exclude masked sentinel from dynamic scale computation.
+    valid_proj = which(val_matrix != Inf & val_matrix > masked_sentinel)
+    if (length(valid_proj) == 0) {
+      cat("Error from computeMaps.R: all electrostatics values are masked or invalid.\n")
+      quit(status=1)
+      stop()
+    }
 
-    if (is.null(opt$elec_max_value)) {
-      minval=min(val_matrix)
-      maxval=max(val_matrix[proj])
+    if (opt$elec_normalize == TRUE) {
+      if (!is.null(opt$elec_norm_min) && !is.null(opt$elec_norm_max)) {
+        span = opt$elec_norm_max - opt$elec_norm_min
+        val_matrix[valid_proj] = 2 * ((val_matrix[valid_proj] - opt$elec_norm_min) / span) - 1
+      } else {
+        val_matrix[valid_proj] = val_matrix[valid_proj] / abs(opt$elec_max_value)
+      }
+      val_matrix[valid_proj] = pmax(-1, pmin(1, val_matrix[valid_proj]))
+      minval = -1
+      maxval = 1
+      main_title = paste0("Normalized electrostatic potential map", "\n", pdb_id)
+    } else if (is.null(opt$elec_max_value)) {
+      minval=min(val_matrix[valid_proj])
+      maxval=max(val_matrix[valid_proj])
+      main_title = paste0("electrostatic potential map", "\n", pdb_id)
     } else {
       minval = -(abs(opt$elec_max_value))
       maxval = abs(opt$elec_max_value)
+      main_title = paste0("electrostatic potential map", "\n", pdb_id)
     }
-    
+
     if (abs(minval) > abs(maxval)) {
       maxval = abs(minval)
     } else {
@@ -275,7 +307,6 @@ for (file in (1:length(files))) {
 
     range=abs(minval-maxval)
     scale_main = paste0("electrostatic","\n","potential")
-    main_title = paste0("electrostatic potential map", "\n", pdb_id)
     colors = c(seq(minval,minval+range*1/3,length=334),seq(minval+range*1/3,minval+range*2/3,length=333),seq(minval+range*2/3,maxval,length=334))
     scale_at = c(ceiling(minval*100000)/100000, round(maxval-range*5/6,5), round(maxval-range*4/6,5), round(maxval-range*3/6,5), round(maxval-range*2/6,5), round(maxval-range*1/6,5), floor(maxval*100000)/100000)
     colorScale <- colorRampPalette(c("red", "white", "blue"))(1000)
@@ -337,8 +368,8 @@ for (file in (1:length(files))) {
   } else if (opt$bfactor == TRUE) { # b-factor scale
     
     # Initialize minval and maxval with default values
-    minval <- min(val_matrix[proj])
-    maxval <- max(val_matrix[proj])
+    minval <- min(val_matrix[proj], na.rm=TRUE)
+    maxval <- max(val_matrix[proj], na.rm=TRUE)
 
     # Override the default minval if a specific minimum value is provided
     if (!is.null(opt$bfactor_min_value)) {
@@ -350,21 +381,38 @@ for (file in (1:length(files))) {
       maxval <- opt$bfactor_max_value
     }
 
+    if (opt$bfactor_normalize == TRUE) {
+      bfactor_abs_max <- max(abs(c(minval, maxval)))
+      if (bfactor_abs_max == 0) {
+        cat("Error from computeMaps.R: cannot normalize bfactor values because min and max are identical.\n")
+        quit(status=1)
+        stop()
+      }
+      val_matrix[proj] <- val_matrix[proj] / bfactor_abs_max
+      val_matrix[proj] <- pmax(-1, pmin(1, val_matrix[proj]))
+      minval <- -1
+      maxval <- 1
+      main_title <- paste0("b-factor map (normalized)\n", pdb_id)
+    } else {
+      main_title <- paste0("b-factor map\n", pdb_id)
+    }
+
+
     main_scale = "b-factor"
-    main_title = paste0("b-factor map\n", pdb_id)
+#     main_title = paste0("electrostatic map\n", pdb_id)
     range = abs(minval-maxval)
 
     scale_main = "b-factor"
     colors = c(seq(minval,minval+range*1/3,length=334),seq(minval+range*1/3,minval+range*2/3,length=333),seq(minval+range*2/3,maxval,length=334))
     # colorScale <- colorRampPalette(c("blue", "white", "red"))(1000)
-    colorScale <- colorRampPalette(c("chocolate3", "white", "darkblue"))(1000)
+    colorScale <- colorRampPalette(c("red", "white", "blue"))(1000)
     
     # colorScale <- colorRampPalette(c("white", "red3"))(1000)
     scale_at = c(ceiling(minval*100000)/100000, round(maxval-range*5/6,5), round(maxval-range*4/6,5), round(maxval-range*3/6,5), round(maxval-range*2/6,5), round(maxval-range*1/6,5), floor(maxval*100000)/100000)
   
   } else if (!is.na(opt$discrete)) { # b-factor scale
     main_scale = "b-factor"
-    main_title = paste0("b-factor map\n", prot_name)
+    main_title = paste0("electrostatic map\n", prot_name)
     
     minval = min(val_matrix[proj])
     maxval = max(val_matrix[proj])
@@ -405,7 +453,7 @@ for (file in (1:length(files))) {
 
   # Creation of the map.
   layout(matrix(c(1,2), nrow=1, ncol=2), widths=c(4,1,1), heights=c(4,1))
-  par(mar=c(14.4,5,9.3,1.2))
+  par(mar=c(14.4,5,9.3,1.2)) #par(mar=c(14.4,5,9.3,1.2))
   
   # compute values for scale axis
   range=maxval-minval
@@ -421,6 +469,8 @@ for (file in (1:length(files))) {
   if (projection == "sinusoidal") {
     labx = expression(paste(phi, " sin(", theta, ")"))
     laby = expression(paste("90 - ", theta))
+#       laby = "y"
+#       labx = "x"
   } else if (projection == "mollweide") {
     labx = "x"
     laby = "y"
@@ -430,9 +480,13 @@ for (file in (1:length(files))) {
   }
   
   # Creation of the image.
+  outside_below_color = 'white'
+  if (opt$electrostatics == TRUE) {
+    outside_below_color = 'black'
+  }
   image.nan.better(t(val_matrix),col=colorScale,
                    zlim=c(minval, maxval),
-                   outside.below.color='white',
+                   outside.below.color=outside_below_color,
                    outside.above.color='gray90',
                    na.color='white',
                    frame.plot = TRUE,
@@ -456,12 +510,39 @@ for (file in (1:length(files))) {
     text(res_phi/360, res_theta/180+14/180, labels = legend, cex = 0.7, lwd = 1.5, col = rgb(red = 0, green = 0, blue = 0, alpha = 0.75))
   }
   # Add scale to plot. 
-  par(mar=c(15.5,1.6,10.5,4.5))
-  image.scale(t(val_matrix), col=colorScale, breaks=colors, scalename = scale_main, horiz=FALSE, yaxt="n")#, ylim = c(0, 1))
+  par(mar=c(15.5,1.6,10.5,4.5)) #par(mar=c(15.5,1.6,10.5,4.5))
+  image.scale(
+    t(val_matrix),
+    col=colorScale,
+    breaks=colors,
+    scalename = scale_main,
+    horiz=FALSE,
+    yaxt="n"
+  )
   axis(4,at=scale_at, las=2, cex.axis=0.8, labels=round(axis_scale,digits = 2))
 
   dev.off()
+
+  if (opt$clean_map == TRUE) {
+    png(clean_png_filename, width = stepabs, height = stepord, units = "px", bg = "white")
+    par(mar=c(0,0,0,0))
+
+    image.nan.better(
+      t(val_matrix),
+      col=colorScale,
+      zlim=c(minval, maxval),
+      outside.below.color=outside_below_color,
+      outside.above.color='gray90',
+      na.color='white',
+      frame.plot = FALSE,
+      axes = FALSE,
+      xlab = "",
+      ylab = "",
+      useRaster = TRUE
+    )
+
+    dev.off()
+  }
 }
 
 quit(status=0)
-
