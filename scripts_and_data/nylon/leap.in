@@ -1,0 +1,7 @@
+source leaprc.protein.ff19SB
+source leaprc.gaff2
+loadamberprep NYL.prep
+loadamberparams NYL.frcmod
+mol = loadpdb output-renum.pdb
+saveamberparm mol NYL.top NYL.crd
+quit
