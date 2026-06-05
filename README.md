@@ -123,7 +123,7 @@ When we assign value to point on the surface, we get spherical coordinates. Then
 ### Creating 2D matrix
 SURFMAP divides the 2D space into grid cells. The resolution depends on the `-s` parameter which means cell size. Points projected onto the same cells are grouped, and their values are aggregated. Software calculates average value in the cell. Result of this step is matrix in which each cell represents part of the surface and has average value assigned to it.
 
-###Smoothing map
+### Smoothing map
 Software smooths values in each cell by averaging values of the nearest neighbors. 
 
 
