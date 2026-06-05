@@ -101,7 +101,7 @@ options:
                         SWANSON. Defaults to CHARMM.
   -verbose VERBOSE      Verbose level of the console log. 0 for silence, 1 for info level, 2 for debug level. Defaults to 1.
 ```
-You can use pre-made script to automatically launch SURFMAP with predefined settings (`surfmap.sh`). For more information you can go directly to original [SURFMAP repo](https://github.com/i2bc/SURFMAP) or to [SURFMAP publication](https://pubs.acs.org/doi/10.1021/acs.jcim.1c01269).
+You can use pre-made script to automatically launch SURFMAP with predefined settings (`scripts_and_data/output_fixedNEW_1805/run_surfmap_batch.py`). For more information you can go directly to original [SURFMAP repo](https://github.com/i2bc/SURFMAP) or to [SURFMAP publication](https://pubs.acs.org/doi/10.1021/acs.jcim.1c01269).
 
 ## General workflow
 SURFMAP converts 3D structure from a PDB file into 2D surface map. The standard pipeline begins by generating surface shell around the structure, then assigns value for selected property to each point on that surface. Finally projects these points onto 2D grid and creates smoothed map. 
