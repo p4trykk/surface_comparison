@@ -1,0 +1,282 @@
+1. CLUSTERING r=25 grid=4x4
+Cluster 0 (17 proteins):
+  - 1WYC_NylB_4rev_aligned_bfactor_map_clean
+  - 3AXG_NylCa_4rev_aligned_bfactor_map_clean
+  - 5XYG_nylcp2_4rev_aligned_bfactor_map_clean
+  - 5Y0M_nylcp2_TS_4rev_aligned_bfactor_map_clean
+  - 8WDW_UMGSP2_4rev_aligned_bfactor_map_clean
+  - 9DYS_Nyl50_4rev_aligned_bfactor_map_clean
+  - NfpolyA_AF3_4rev_aligned_bfactor_map_clean
+  - NylCk_AF3_4rev_aligned_bfactor_map_clean
+  - Ooh_AF3_4rev_aligned_bfactor_map_clean
+  - ReU_AF3_4rev_aligned_bfactor_map_clean
+  - Rol10x_AF3_4rev_aligned_bfactor_map_clean
+  - TvgC_AF3_4rev_aligned_bfactor_map_clean
+  - UMGSP3_AF3_4rev_aligned_bfactor_map_clean
+  - nc_NylC_AF3_4rev_aligned_bfactor_map_clean
+  - pam1_AF3_4rev_aligned_bfactor_map_clean
+  - ph_NylC_AF3_4rev_aligned_bfactor_map_clean
+  - tt_NylC_AF3_4rev_aligned_bfactor_map_clean
+Cluster 1 (14 proteins):
+  - 1CEX_cutfv_4rev_aligned_bfactor_map_clean
+  - 1CRL_lipCr_4rev_aligned_bfactor_map_clean
+  - 1CUS_fsc_4rev_aligned_bfactor_map_clean
+  - 2CHA_chym_4rev_aligned_bfactor_map_clean
+  - 3GBS_aoc_4rev_aligned_bfactor_map_clean
+  - 4CG1_Tfcut2_4rev_aligned_bfactor_map_clean
+  - 4OYY_hic_4rev_aligned_bfactor_map_clean
+  - 4WFJ_Cut190_4rev_aligned_bfactor_map_clean
+  - 5D8M_MGS0156_4rev_aligned_bfactor_map_clean
+  - Thccut1_AF3_4rev_aligned_bfactor_map_clean
+  - Thccut2_AF3_4rev_aligned_bfactor_map_clean
+  - TtA_AF3_4rev_aligned_bfactor_map_clean
+  - afnitB_AF3_4rev_aligned_bfactor_map_clean
+  - lipAN_AF3_4rev_aligned_bfactor_map_clean
+Cluster 2 (11 proteins):
+  - 1PPN_pap_4rev_aligned_bfactor_map_clean
+  - 1SBC_sub_4rev_aligned_bfactor_map_clean
+  - 1TPO_tryp_4rev_aligned_bfactor_map_clean
+  - 3TGL_LipRM_4rev_aligned_bfactor_map_clean
+  - 4EB0_LCC_4rev_aligned_bfactor_map_clean
+  - 6QGC_PETase_4rev_aligned_bfactor_map_clean
+  - 6THT_LCC_ICCG_4rev_aligned_bfactor_map_clean
+  - BcC_AF3_4rev_aligned_bfactor_map_clean
+  - GatA_AF3_4rev_aligned_bfactor_map_clean
+  - MsmegA_AF3_4rev_aligned_bfactor_map_clean
+  - UMGSP1_AF3_4rev_aligned_bfactor_map_clean
+
+2. CLUSTERING r=25 grid=5x5
+Cluster 0 (19 proteins):
+  - 1WYC_NylB_4rev_aligned_bfactor_map_clean
+  - 3AXG_NylCa_4rev_aligned_bfactor_map_clean
+  - 3TGL_LipRM_4rev_aligned_bfactor_map_clean
+  - 5XYG_nylcp2_4rev_aligned_bfactor_map_clean
+  - 5Y0M_nylcp2_TS_4rev_aligned_bfactor_map_clean
+  - 8WDW_UMGSP2_4rev_aligned_bfactor_map_clean
+  - 9DYS_Nyl50_4rev_aligned_bfactor_map_clean
+  - MsmegA_AF3_4rev_aligned_bfactor_map_clean
+  - NfpolyA_AF3_4rev_aligned_bfactor_map_clean
+  - NylCk_AF3_4rev_aligned_bfactor_map_clean
+  - Ooh_AF3_4rev_aligned_bfactor_map_clean
+  - ReU_AF3_4rev_aligned_bfactor_map_clean
+  - Rol10x_AF3_4rev_aligned_bfactor_map_clean
+  - TvgC_AF3_4rev_aligned_bfactor_map_clean
+  - UMGSP3_AF3_4rev_aligned_bfactor_map_clean
+  - nc_NylC_AF3_4rev_aligned_bfactor_map_clean
+  - pam1_AF3_4rev_aligned_bfactor_map_clean
+  - ph_NylC_AF3_4rev_aligned_bfactor_map_clean
+  - tt_NylC_AF3_4rev_aligned_bfactor_map_clean
+Cluster 1 (11 proteins):
+  - 1CEX_cutfv_4rev_aligned_bfactor_map_clean
+  - 1CRL_lipCr_4rev_aligned_bfactor_map_clean
+  - 1CUS_fsc_4rev_aligned_bfactor_map_clean
+  - 3GBS_aoc_4rev_aligned_bfactor_map_clean
+  - 4CG1_Tfcut2_4rev_aligned_bfactor_map_clean
+  - 4OYY_hic_4rev_aligned_bfactor_map_clean
+  - 4WFJ_Cut190_4rev_aligned_bfactor_map_clean
+  - 5D8M_MGS0156_4rev_aligned_bfactor_map_clean
+  - Thccut1_AF3_4rev_aligned_bfactor_map_clean
+  - Thccut2_AF3_4rev_aligned_bfactor_map_clean
+  - TtA_AF3_4rev_aligned_bfactor_map_clean
+Cluster 2 (12 proteins):
+  - 1PPN_pap_4rev_aligned_bfactor_map_clean
+  - 1SBC_sub_4rev_aligned_bfactor_map_clean
+  - 1TPO_tryp_4rev_aligned_bfactor_map_clean
+  - 2CHA_chym_4rev_aligned_bfactor_map_clean
+  - 4EB0_LCC_4rev_aligned_bfactor_map_clean
+  - 6QGC_PETase_4rev_aligned_bfactor_map_clean
+  - 6THT_LCC_ICCG_4rev_aligned_bfactor_map_clean
+  - BcC_AF3_4rev_aligned_bfactor_map_clean
+  - GatA_AF3_4rev_aligned_bfactor_map_clean
+  - UMGSP1_AF3_4rev_aligned_bfactor_map_clean
+  - afnitB_AF3_4rev_aligned_bfactor_map_clean
+  - lipAN_AF3_4rev_aligned_bfactor_map_clean
+
+3. CLUSTERING r=25 grid=6x6
+Cluster 0 (18 proteins):
+  - 1WYC_NylB_4rev_aligned_bfactor_map_clean
+  - 3AXG_NylCa_4rev_aligned_bfactor_map_clean
+  - 5XYG_nylcp2_4rev_aligned_bfactor_map_clean
+  - 5Y0M_nylcp2_TS_4rev_aligned_bfactor_map_clean
+  - 8WDW_UMGSP2_4rev_aligned_bfactor_map_clean
+  - 9DYS_Nyl50_4rev_aligned_bfactor_map_clean
+  - MsmegA_AF3_4rev_aligned_bfactor_map_clean
+  - NfpolyA_AF3_4rev_aligned_bfactor_map_clean
+  - NylCk_AF3_4rev_aligned_bfactor_map_clean
+  - Ooh_AF3_4rev_aligned_bfactor_map_clean
+  - ReU_AF3_4rev_aligned_bfactor_map_clean
+  - Rol10x_AF3_4rev_aligned_bfactor_map_clean
+  - TvgC_AF3_4rev_aligned_bfactor_map_clean
+  - UMGSP3_AF3_4rev_aligned_bfactor_map_clean
+  - nc_NylC_AF3_4rev_aligned_bfactor_map_clean
+  - pam1_AF3_4rev_aligned_bfactor_map_clean
+  - ph_NylC_AF3_4rev_aligned_bfactor_map_clean
+  - tt_NylC_AF3_4rev_aligned_bfactor_map_clean
+Cluster 1 (11 proteins):
+  - 1CEX_cutfv_4rev_aligned_bfactor_map_clean
+  - 1CRL_lipCr_4rev_aligned_bfactor_map_clean
+  - 1CUS_fsc_4rev_aligned_bfactor_map_clean
+  - 3GBS_aoc_4rev_aligned_bfactor_map_clean
+  - 4CG1_Tfcut2_4rev_aligned_bfactor_map_clean
+  - 4OYY_hic_4rev_aligned_bfactor_map_clean
+  - 4WFJ_Cut190_4rev_aligned_bfactor_map_clean
+  - 5D8M_MGS0156_4rev_aligned_bfactor_map_clean
+  - Thccut1_AF3_4rev_aligned_bfactor_map_clean
+  - Thccut2_AF3_4rev_aligned_bfactor_map_clean
+  - TtA_AF3_4rev_aligned_bfactor_map_clean
+Cluster 2 (13 proteins):
+  - 1PPN_pap_4rev_aligned_bfactor_map_clean
+  - 1SBC_sub_4rev_aligned_bfactor_map_clean
+  - 1TPO_tryp_4rev_aligned_bfactor_map_clean
+  - 2CHA_chym_4rev_aligned_bfactor_map_clean
+  - 3TGL_LipRM_4rev_aligned_bfactor_map_clean
+  - 4EB0_LCC_4rev_aligned_bfactor_map_clean
+  - 6QGC_PETase_4rev_aligned_bfactor_map_clean
+  - 6THT_LCC_ICCG_4rev_aligned_bfactor_map_clean
+  - BcC_AF3_4rev_aligned_bfactor_map_clean
+  - GatA_AF3_4rev_aligned_bfactor_map_clean
+  - UMGSP1_AF3_4rev_aligned_bfactor_map_clean
+  - afnitB_AF3_4rev_aligned_bfactor_map_clean
+  - lipAN_AF3_4rev_aligned_bfactor_map_clean
+
+4. CLUSTERING r=25 grid=7x7
+Cluster 0 (18 proteins):
+  - 3AXG_NylCa_4rev_aligned_bfactor_map_clean
+  - 3TGL_LipRM_4rev_aligned_bfactor_map_clean
+  - 5XYG_nylcp2_4rev_aligned_bfactor_map_clean
+  - 5Y0M_nylcp2_TS_4rev_aligned_bfactor_map_clean
+  - 8WDW_UMGSP2_4rev_aligned_bfactor_map_clean
+  - 9DYS_Nyl50_4rev_aligned_bfactor_map_clean
+  - MsmegA_AF3_4rev_aligned_bfactor_map_clean
+  - NfpolyA_AF3_4rev_aligned_bfactor_map_clean
+  - NylCk_AF3_4rev_aligned_bfactor_map_clean
+  - Ooh_AF3_4rev_aligned_bfactor_map_clean
+  - ReU_AF3_4rev_aligned_bfactor_map_clean
+  - Rol10x_AF3_4rev_aligned_bfactor_map_clean
+  - TvgC_AF3_4rev_aligned_bfactor_map_clean
+  - UMGSP3_AF3_4rev_aligned_bfactor_map_clean
+  - nc_NylC_AF3_4rev_aligned_bfactor_map_clean
+  - pam1_AF3_4rev_aligned_bfactor_map_clean
+  - ph_NylC_AF3_4rev_aligned_bfactor_map_clean
+  - tt_NylC_AF3_4rev_aligned_bfactor_map_clean
+Cluster 1 (11 proteins):
+  - 1CEX_cutfv_4rev_aligned_bfactor_map_clean
+  - 1CRL_lipCr_4rev_aligned_bfactor_map_clean
+  - 1CUS_fsc_4rev_aligned_bfactor_map_clean
+  - 3GBS_aoc_4rev_aligned_bfactor_map_clean
+  - 4CG1_Tfcut2_4rev_aligned_bfactor_map_clean
+  - 4OYY_hic_4rev_aligned_bfactor_map_clean
+  - 4WFJ_Cut190_4rev_aligned_bfactor_map_clean
+  - 5D8M_MGS0156_4rev_aligned_bfactor_map_clean
+  - Thccut1_AF3_4rev_aligned_bfactor_map_clean
+  - Thccut2_AF3_4rev_aligned_bfactor_map_clean
+  - TtA_AF3_4rev_aligned_bfactor_map_clean
+Cluster 2 (13 proteins):
+  - 1PPN_pap_4rev_aligned_bfactor_map_clean
+  - 1SBC_sub_4rev_aligned_bfactor_map_clean
+  - 1TPO_tryp_4rev_aligned_bfactor_map_clean
+  - 1WYC_NylB_4rev_aligned_bfactor_map_clean
+  - 2CHA_chym_4rev_aligned_bfactor_map_clean
+  - 4EB0_LCC_4rev_aligned_bfactor_map_clean
+  - 6QGC_PETase_4rev_aligned_bfactor_map_clean
+  - 6THT_LCC_ICCG_4rev_aligned_bfactor_map_clean
+  - BcC_AF3_4rev_aligned_bfactor_map_clean
+  - GatA_AF3_4rev_aligned_bfactor_map_clean
+  - UMGSP1_AF3_4rev_aligned_bfactor_map_clean
+  - afnitB_AF3_4rev_aligned_bfactor_map_clean
+  - lipAN_AF3_4rev_aligned_bfactor_map_clean
+
+5. CLUSTERING r=25 grid=8x8
+Cluster 0 (19 proteins):
+  - 1WYC_NylB_4rev_aligned_bfactor_map_clean
+  - 3AXG_NylCa_4rev_aligned_bfactor_map_clean
+  - 3TGL_LipRM_4rev_aligned_bfactor_map_clean
+  - 5XYG_nylcp2_4rev_aligned_bfactor_map_clean
+  - 5Y0M_nylcp2_TS_4rev_aligned_bfactor_map_clean
+  - 8WDW_UMGSP2_4rev_aligned_bfactor_map_clean
+  - 9DYS_Nyl50_4rev_aligned_bfactor_map_clean
+  - MsmegA_AF3_4rev_aligned_bfactor_map_clean
+  - NfpolyA_AF3_4rev_aligned_bfactor_map_clean
+  - NylCk_AF3_4rev_aligned_bfactor_map_clean
+  - Ooh_AF3_4rev_aligned_bfactor_map_clean
+  - ReU_AF3_4rev_aligned_bfactor_map_clean
+  - Rol10x_AF3_4rev_aligned_bfactor_map_clean
+  - TvgC_AF3_4rev_aligned_bfactor_map_clean
+  - UMGSP3_AF3_4rev_aligned_bfactor_map_clean
+  - nc_NylC_AF3_4rev_aligned_bfactor_map_clean
+  - pam1_AF3_4rev_aligned_bfactor_map_clean
+  - ph_NylC_AF3_4rev_aligned_bfactor_map_clean
+  - tt_NylC_AF3_4rev_aligned_bfactor_map_clean
+Cluster 1 (11 proteins):
+  - 1CEX_cutfv_4rev_aligned_bfactor_map_clean
+  - 1CRL_lipCr_4rev_aligned_bfactor_map_clean
+  - 1CUS_fsc_4rev_aligned_bfactor_map_clean
+  - 3GBS_aoc_4rev_aligned_bfactor_map_clean
+  - 4CG1_Tfcut2_4rev_aligned_bfactor_map_clean
+  - 4OYY_hic_4rev_aligned_bfactor_map_clean
+  - 4WFJ_Cut190_4rev_aligned_bfactor_map_clean
+  - 5D8M_MGS0156_4rev_aligned_bfactor_map_clean
+  - Thccut1_AF3_4rev_aligned_bfactor_map_clean
+  - Thccut2_AF3_4rev_aligned_bfactor_map_clean
+  - TtA_AF3_4rev_aligned_bfactor_map_clean
+Cluster 2 (12 proteins):
+  - 1PPN_pap_4rev_aligned_bfactor_map_clean
+  - 1SBC_sub_4rev_aligned_bfactor_map_clean
+  - 1TPO_tryp_4rev_aligned_bfactor_map_clean
+  - 2CHA_chym_4rev_aligned_bfactor_map_clean
+  - 4EB0_LCC_4rev_aligned_bfactor_map_clean
+  - 6QGC_PETase_4rev_aligned_bfactor_map_clean
+  - 6THT_LCC_ICCG_4rev_aligned_bfactor_map_clean
+  - BcC_AF3_4rev_aligned_bfactor_map_clean
+  - GatA_AF3_4rev_aligned_bfactor_map_clean
+  - UMGSP1_AF3_4rev_aligned_bfactor_map_clean
+  - afnitB_AF3_4rev_aligned_bfactor_map_clean
+  - lipAN_AF3_4rev_aligned_bfactor_map_clean
+
+6. CLUSTERING r=25 grid=9x9
+Cluster 0 (19 proteins):
+  - 1WYC_NylB_4rev_aligned_bfactor_map_clean
+  - 3AXG_NylCa_4rev_aligned_bfactor_map_clean
+  - 3TGL_LipRM_4rev_aligned_bfactor_map_clean
+  - 5XYG_nylcp2_4rev_aligned_bfactor_map_clean
+  - 5Y0M_nylcp2_TS_4rev_aligned_bfactor_map_clean
+  - 8WDW_UMGSP2_4rev_aligned_bfactor_map_clean
+  - 9DYS_Nyl50_4rev_aligned_bfactor_map_clean
+  - MsmegA_AF3_4rev_aligned_bfactor_map_clean
+  - NfpolyA_AF3_4rev_aligned_bfactor_map_clean
+  - NylCk_AF3_4rev_aligned_bfactor_map_clean
+  - Ooh_AF3_4rev_aligned_bfactor_map_clean
+  - ReU_AF3_4rev_aligned_bfactor_map_clean
+  - Rol10x_AF3_4rev_aligned_bfactor_map_clean
+  - TvgC_AF3_4rev_aligned_bfactor_map_clean
+  - UMGSP3_AF3_4rev_aligned_bfactor_map_clean
+  - nc_NylC_AF3_4rev_aligned_bfactor_map_clean
+  - pam1_AF3_4rev_aligned_bfactor_map_clean
+  - ph_NylC_AF3_4rev_aligned_bfactor_map_clean
+  - tt_NylC_AF3_4rev_aligned_bfactor_map_clean
+Cluster 1 (13 proteins):
+  - 1CEX_cutfv_4rev_aligned_bfactor_map_clean
+  - 1CRL_lipCr_4rev_aligned_bfactor_map_clean
+  - 1CUS_fsc_4rev_aligned_bfactor_map_clean
+  - 2CHA_chym_4rev_aligned_bfactor_map_clean
+  - 3GBS_aoc_4rev_aligned_bfactor_map_clean
+  - 4CG1_Tfcut2_4rev_aligned_bfactor_map_clean
+  - 4OYY_hic_4rev_aligned_bfactor_map_clean
+  - 4WFJ_Cut190_4rev_aligned_bfactor_map_clean
+  - 5D8M_MGS0156_4rev_aligned_bfactor_map_clean
+  - Thccut1_AF3_4rev_aligned_bfactor_map_clean
+  - Thccut2_AF3_4rev_aligned_bfactor_map_clean
+  - TtA_AF3_4rev_aligned_bfactor_map_clean
+  - lipAN_AF3_4rev_aligned_bfactor_map_clean
+Cluster 2 (9 proteins):
+  - 1PPN_pap_4rev_aligned_bfactor_map_clean
+  - 1SBC_sub_4rev_aligned_bfactor_map_clean
+  - 1TPO_tryp_4rev_aligned_bfactor_map_clean
+  - 4EB0_LCC_4rev_aligned_bfactor_map_clean
+  - 6QGC_PETase_4rev_aligned_bfactor_map_clean
+  - 6THT_LCC_ICCG_4rev_aligned_bfactor_map_clean
+  - BcC_AF3_4rev_aligned_bfactor_map_clean
+  - UMGSP1_AF3_4rev_aligned_bfactor_map_clean
+  - afnitB_AF3_4rev_aligned_bfactor_map_clean
+Cluster 3 (1 proteins):
+  - GatA_AF3_4rev_aligned_bfactor_map_clean
