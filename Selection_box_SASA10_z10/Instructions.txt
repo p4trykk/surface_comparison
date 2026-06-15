@@ -1,0 +1,6 @@
+Here you can find the script used to create a PyMOL selection of the residues located on the "frontal" face of the proteins.
+
+The output CSV file contains, for each enzyme, the residues included in the selection. Both the complete set of selected residues (orange) and the subset of residues with a SASA value greater than 10 (red) are reported.
+
+The folder also includes all files required to run the scripts, except for the already aligned PDB structures generated using Patryk's alignment script. Those files are already available in GitHub repository (run proteinAlign.py in scripts_and_data folder).
+
