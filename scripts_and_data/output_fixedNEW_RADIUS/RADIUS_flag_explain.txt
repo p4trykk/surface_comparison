@@ -1,0 +1,6 @@
+RADIUS in SURFMAP:
+-rad specify additional radius in angstroms that is added to the radius of every atom before molecular surface is calculated by MSMS. Its clearly visible in generated shell surface files.
+
+Changing this value directly affects the surface geometry:
+-larger values generate smoother surface by effectively increasing atomic radius. In result, surface features (bigger patterns / shapes / patches more visible)
+-smaller values generate more detailed and realistic surface that better reflect actual atomic geometry. However final surface may appear rougher and contain more local features
