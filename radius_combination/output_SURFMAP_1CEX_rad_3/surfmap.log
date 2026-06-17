@@ -1,0 +1,16 @@
+2026-06-16 12:31:33 — INFO — surfmap.lib.core.surfmap_from_pdb ........................... SURFACE MAPPING OF THE BFACTOR PROPERTY
+2026-06-16 12:31:33 — INFO — surfmap.lib.core.surfmap_from_pdb ........................... Step 1: computing a shell around the protein surface
+2026-06-16 12:31:33 — DEBUG — surfmap.tools.compute_shell.run .............................. Convert pdb to xyzr format (expected MSMS input)
+2026-06-16 12:31:33 — DEBUG — surfmap.tools.compute_shell.run .............................. Running MSMS command: /home/p4trykk/SURFMAP/surfmap/utils/MSMS/msms -if $rad_3/shells/1cex_mut_only_atoms.xyzr -of $rad_3/shells/1cex_mut_only_atoms
+2026-06-16 12:31:34 — DEBUG — surfmap.tools.compute_shell.run .............................. Convert MSMS .vert file into CSV format
+2026-06-16 12:31:34 — DEBUG — surfmap.tools.compute_shell.run .............................. Convert CSV into PDB format
+2026-06-16 12:31:34 — INFO — surfmap.lib.core.surfmap_from_pdb ........................... Step 2: computing the property values and/or assign it to the shell particles
+2026-06-16 12:31:34 — DEBUG — surfmap.tools.SurfmapTools.run_particles_mapping .............................. Get dictionary of the PDB structure from 1cex_mut_only_atoms.pdb
+2026-06-16 12:31:34 — DEBUG — surfmap.tools.SurfmapTools.run_particles_mapping .............................. Get dictionary of the shell structure from $rad_3/shells/1cex_mut_only_atoms_shell.pdb
+2026-06-16 12:31:34 — DEBUG — surfmap.tools.SurfmapTools.run_particles_mapping .............................. Retrieving the center of mass of the pdb structure
+2026-06-16 12:31:35 — INFO — surfmap.lib.core.surfmap_from_pdb ........................... Step 3: computing the 2D sinusoidal projection coordinates of each shell particle
+2026-06-16 12:31:35 — DEBUG — surfmap.lib.core.compute_coords_list .............................. Running the command: Rscript /home/p4trykk/SURFMAP/surfmap/scripts/computeCoordList.R -f $rad_3/1cex_mut_only_atoms_bfactor_partlist.out -s 2 -P sinusoidal -o ./$rad_3
+2026-06-16 12:31:38 — INFO — surfmap.lib.core.surfmap_from_pdb ........................... Step 4: dividing the 2D projection into 180x90 cells and smoothing the values
+2026-06-16 12:31:38 — DEBUG — surfmap.lib.core.compute_matrix .............................. Running the command: Rscript /home/p4trykk/SURFMAP/surfmap/scripts/computeMatrices.R -i $rad_3/coord_lists/1cex_mut_only_atoms_bfactor_coord_list.txt -s 2 -P sinusoidal -o ./$rad_3 --suffix _coord_list.txt
+2026-06-16 12:31:48 — INFO — surfmap.lib.core.surfmap_from_pdb ........................... Step 5: computing the 2D map
+2026-06-16 12:31:48 — DEBUG — surfmap.lib.core.compute_map .............................. Running the command: Rscript /home/p4trykk/SURFMAP/surfmap/scripts/computeMaps.R -i $rad_3/smoothed_matrices/1cex_mut_only_atoms_bfactor_smoothed_matrix.txt --bfactor -s 2 -p 1cex_mut_only_atoms -P sinusoidal -o ./$rad_3 --suffix _smoothed_matrix.txt --png --clean_map --bfactor_normalize
