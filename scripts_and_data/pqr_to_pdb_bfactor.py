@@ -30,19 +30,39 @@ class PdbAtomInfo:
 
 
 def parse_pqr_atom(line: str) -> PqrAtom:
-    record = line[0:6].strip()
-    serial = int(line[6:11])
-    name = line[12:16].strip()
-    resname = line[17:20].strip()
-    resseq = int(line[22:26])
-    x = float(line[30:38])
-    y = float(line[38:46])
-    z = float(line[46:54])
-    charge = float(line[54:62])
-    radius = float(line[62:70])
-    element = line[76:78].strip() if len(line) >= 78 else ""
-    if not element:
-        element = "".join(ch for ch in name if ch.isalpha())[:2].strip().upper()
+    if len(line) > 73:
+
+        record = line[0:6].strip()
+        serial = int(line[6:11])
+        name = line[12:16].strip()
+        resname = line[17:20].strip()
+        resseq = int(line[22:26].strip())
+        x = float(line[30:38])
+        y = float(line[38:46])
+        z = float(line[46:54])
+        charge = float(line[54:62])
+        radius = float(line[62:70])
+        element = line[76:78].strip() if len(line) >= 78 else ""
+        if not element:
+            element = "".join(ch for ch in name if ch.isalpha())[:2].strip().upper()
+
+    else:
+        record = line[0:6].strip()
+        serial = int(line[6:11])
+        name = line[12:16].strip()
+        resname = line[17:20].strip()
+        resseq = int(line[22:28].strip())
+        x = float(line[28:38])
+        y = float(line[38:46])
+        z = float(line[46:54])
+        charge = float(line[54:63])
+        radius = float(line[63:72])
+        element = line[76:78].strip() if len(line) >= 78 else ""
+        if not element:
+            element = "".join(ch for ch in name if ch.isalpha())[:2].strip().upper()
+
+
+
     return PqrAtom(record, serial, name, resname, resseq, x, y, z, charge, radius, element)
 
 
