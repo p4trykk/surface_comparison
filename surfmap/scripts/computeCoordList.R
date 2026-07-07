@@ -115,6 +115,8 @@ dir.create(outdir, showWarnings = FALSE)
 for (file in (1:length(files))) {
 
   Data = read.table(files[file], fill = TRUE, header = TRUE)
+  name_prefix=gsub("_partlist.out", "", basename(files[file]))
+
   
   Data[,1] = (Data[,1])%%(2*pi) # Now phi values are included in [0, 2*pi]
   Data[,1] = Data[,1]-pi # Now phi values are included in [-pi, pi]
@@ -140,6 +142,9 @@ for (file in (1:length(files))) {
     Dataproj[,2] = 90 - Dataproj[,2]
     Dataproj[,1] = round(Dataproj[,1], 3)
     Dataproj[,2] = round(Dataproj[,2], 3)
+    cat("X_proj: ", Dataproj[1:10,1], "\n") #x_proj
+    cat("Y_proj: ", Dataproj[1:10,2], "\n") #y_proj
+    cat("value: ", Dataproj[1:10,3], "\n") #value
   } else {
     if (projection == "mollweide") {
       proj = mapproject(Data[,1]*180/pi, Data[,2]*180/pi-90, 
@@ -173,12 +178,17 @@ for (file in (1:length(files))) {
       
     }
   }
+
+  projected_filename=file.path(outdir, paste0(name_prefix, "_projected_values.txt"))
+  projected_values=Dataproj[,c(1:3)]
+  colnames(projected_values)=c("x_proj","y_proj","value")
+  write.table(projected_values, file=projected_filename, sep="\t", row.names=FALSE, quote=FALSE)
   
   # Call the function that will actually create the energy matrix.
   energy_frame = energy_matrix(Dataproj, file)
   
   # write the data frame in a file.
-  name_prefix = gsub("_partlist.out", "", basename(files[file]))
+#   name_prefix = gsub("_partlist.out", "", basename(files[file]))
   filename = file.path(outdir, paste0(name_prefix, "_coord_list.txt"))
   
   write.table(energy_frame, file = filename, sep = "\t", row.names = FALSE, quote = FALSE)
