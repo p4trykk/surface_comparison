@@ -1,0 +1,59 @@
+SURFACE MAPPING OF THE BFACTOR PROPERTY
+Step 1: computing a shell around the protein surface
+Step 2: computing the property values and/or assign it to the shell particles
+Step 3: computing the 2D sinusoidal projection coordinates of each shell particle
+X_proj:  -28.486 -28.492 -30.349 -24.35 -24.629 -24.13 -24.516 -25.004 -24.849 -26.578 
+Y_proj:  21.513 22.158 21.814 21.856 21.203 21.16 20.32 20.388 18.431 17.214 
+value:  -0.57 -0.57 0.02 -0.57 -0.57 -0.57 -0.57 -0.57 0.02 0.02 
+Step 4: dividing the 2D projection into 180x90 cells and smoothing the values
+Step 5: computing the 2D map
+
+SURFMAP: Projection of protein surface features on 2D map
+Copyright (C) 2021  H. Schweke
+Version: 2.2.0
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+--------------------------------------------------------------------------------
+SURFMAP relies on the use of MSMS (version 2.6.1) - Copyright (c) M. F. Sanner, 1994.
+
+As a corollary of MSMS's license terms and conditions, by using SURFMAP,
+you agree to acknowledge the use of the MSMS software that results in any 
+published work, including scientific papers, films and videotapes by 
+citing the following reference:
+
+    Sanner, M.F., Spehner, J.-C., and Olson, A.J. (1996) Reduced surface:
+    an efficient way to compute molecular surfaces. Biopolymers, Vol. 38.,
+    (3), 305-320.
+
+MSMS is free for academic use. For commercial use please contact
+M. F. Sanner at sanner@scripps.edu.
+--------------------------------------------------------------------------------
+If you use SURFMAP for your research, please cite the following
+papers:
+    - Hugo Schweke, Marie-Hélène Mucchielli, Nicolas Chevrollier,
+      Simon Gosset, Anne Lopes (2021) SURFMAP: a software for mapping
+      in two dimensions protein surface features. bioRxiv
+      2021.10.15.464543; doi: https://doi.org/10.1101/2021.10.15.464543
+
+    - Sanner, M.F., Spehner, J.-C., and Olson, A.J. (1996) Reduced 
+      surface: an efficient way to compute molecular surfaces. 
+      Biopolymers, Vol. 38., (3), 305-320.
+--------------------------------------------------------------------------------
+
+
