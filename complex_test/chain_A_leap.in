@@ -1,0 +1,5 @@
+source leaprc.protein.ff19SB
+set default pbradii mbondi3
+mol = loadpdb chain_A_renum.pdb
+saveamberparm mol chain_A.top chain_A.crd
+quit
