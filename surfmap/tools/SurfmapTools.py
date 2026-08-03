@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import argparse
+import os.path
 from pathlib import Path
 import sys
 from typing import Union
@@ -218,7 +219,8 @@ def run_particles_mapping(shell: Union[str, Path], pdb: Union[str, Path], tomap:
         # looping over all particules and computing corresponding Value
         logger.trace(
             f"Looping over all shell particles to assign them the property value of their closest atoms/residues")
-        with open('closest_atoms_to_shell_pts.txt', 'w', encoding='utf-8') as out1:
+        path_var=os.path.join(Path(outdir), 'closest_atoms_to_shell_pts.txt')
+        with open(path_var, 'w', encoding='utf-8') as out1:
             for i, particle in enumerate(dshell["partlist"], start=1):
 
                 # get coords of the particule

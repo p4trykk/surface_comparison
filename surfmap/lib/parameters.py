@@ -128,6 +128,12 @@ def get_args():
         action="store_true",
         help="If chosen, the resulted maps are not smoothed (careful: this option should be used only for discrete values!)."
     )
+    parser.add_argument(
+        "--write-shell-pdb",
+        "--write-mapped-shell-pdb",
+        action="store_true",
+        help="write shell with bfactor (charges) vvalues"
+    )
 
     parser.add_argument(
         "--bfactor-normalize",
@@ -265,6 +271,8 @@ class Parameters:
         self.bfactor_min_value = None
         self.bfactor_max_value = None
         self.bfactor_normalize = False
+        self.write_shell_pdb = False
+        self.write_mapped_shell_pdb = False
 
         if not args.docker:
             self._check_surfmap_requirements()
@@ -312,7 +320,7 @@ class Parameters:
         self.pqr: str = args.pqr
 
         # define optional residue mask file used only for electrostatics mapping
-        self.electrostatics_mask: str = args.electrostatics_mask if self.ppttomap == "electrostatics" else None
+        self.electrostatics_mask: str = args.electrostatics_mask if self.ppttomap == "electrostatics" or "bfactor" else None
         if args.electrostatics_mask and self.ppttomap != "electrostatics":
             print(
                 "Warning: option --electrostatics-mask is only used with '-tomap electrostatics'. The mask will be ignored.")
@@ -379,6 +387,8 @@ class Parameters:
         self.keep: bool = args.keep
         self.clean_map: bool = args.clean_map
         self.docker: bool = args.docker
+        self.write_shell_pdb: bool = getattr(args, "write_shell_pdb", False)
+        self.write_mapped_shell_pdb: bool = self.write_shell_pdb
 
         # define and create output directory if not exists
         self.DEFAULT_OUTDIR_BASENAME = "output_SURFMAP_{}_{}"
@@ -434,7 +444,7 @@ class Parameters:
             exit()
 
     def _check_rad(self):
-        if not 10.0 >= self.rad >= 0.5:
+        if not 10.0 >= self.rad >= 0.1:
             print(
                 "The radius given in input (arg -rad) is either too large or too small. Please provide a number between 0.5 and 10.\nExiting now.")
             exit()
