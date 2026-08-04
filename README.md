@@ -98,6 +98,7 @@ options:
   --docker              If chosen, SURFMAP will be run on a docker container (requires docker installed).
   --pqr PQR             Path to a PQR file used for electrostatics calculation. Option only available if '-tomap electrosatics' is requested.
                         Defaults to None.
+  --clean-map           To generate map without axis and labels (ready for analysis)
   -ff FF                Force-field used by pdb2pqr for electrostatics calculation. One of the following: AMBER, CHARMM, PARSE, TYL06, PEOEPB,
                         SWANSON. Defaults to CHARMM.
   -verbose VERBOSE      Verbose level of the console log. 0 for silence, 1 for info level, 2 for debug level. Defaults to 1.
