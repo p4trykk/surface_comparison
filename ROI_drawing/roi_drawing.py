@@ -8,7 +8,9 @@ import os
 def draw_circle(input_path,output_path=None,center=(90, 45),radius=25,color=(0, 0, 0),width=1.5):
     img = Image.open(input_path).convert("RGB")
     draw = ImageDraw.Draw(img)
-    x, y = center
+    x, y = map(int, center)
+    radius = int(radius)
+    width = int(width)
     bbox = [x - radius,y - radius, x + radius, y + radius]
 
     draw.ellipse(bbox, outline=color, width=width)
