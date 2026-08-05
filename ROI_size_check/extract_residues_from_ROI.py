@@ -114,5 +114,4 @@ results.to_csv(OUTPUT_CSV, index=False)
 print(results)
 
 print()
-print(f"Znaleziono {len(results)} różnych aminokwasów.")
-print(f"Wyniki zapisano do {OUTPUT_CSV}")
+print(f"found: {len(results)} aminoacids")
