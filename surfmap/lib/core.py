@@ -277,11 +277,19 @@ def surfmap_from_pdb(params: Parameters, with_copyright: bool = True):
         logger.info(msg=f"Surface mapping of the {tomap} property".upper())
 
         if tomap == "bfactor" and params.flat_bfactor_map:
-            logger.info(msg="Step 1: building flat bfactor matrix directly from x/y coordinates (no spherical projection)")
+            if getattr(params, "write_shell_pdb", getattr(params, "write_mapped_shell_pdb", False)):
+                logger.warning(
+                    "--write-shell-pdb was requested, but --flat-bfactor-map does not generate an MSMS shell; "
+                    "no mapped shell PDB will be written for this flat-map run."
+                )
+            logger.info(
+                msg="Step 1: building flat bfactor matrix directly from x/y coordinates (no spherical projection)")
             matrix_file, smoothed_matrix_file = _compute_flat_bfactor_matrices(params=params)
             selected_matrix = matrix_file if params.nosmooth else smoothed_matrix_file
-            # _, smoothed_matrix_file = _compute_flat_bfactor_matrices(params=params)
-            logger.info(msg="Step 2: computing the 2D map")
+            logger.info(
+                msg=f"Step 2: {'using raw matrix (nosmooth enabled)' if params.nosmooth else 'using smoothed matrix'}"
+            )
+            logger.info(msg="Step 3: computing the 2D map")
             _, png_filename, pdf_filename = compute_map(
                 params=params,
                 matrix_file=selected_matrix,
@@ -297,8 +305,10 @@ def surfmap_from_pdb(params: Parameters, with_copyright: bool = True):
             logger.info(msg=f"Step {step_index}: computing a shell around the protein surface")
             csv_coords, shell = run_compute_shell(pdb_filename=params.pdbarg, out_dir=outdir_shell,
                                                   extra_radius=extra_radius)
+            reference_shell = shell
         else:
             logger.info(msg=f"Step {step_index}: shell already exists. Skipping this step")
+            reference_shell = shell
 
         if params.ppttomap == "electrostatics":
             step_index += 1
@@ -311,8 +321,20 @@ def surfmap_from_pdb(params: Parameters, with_copyright: bool = True):
         step_index += 1
         logger.info(msg=f"Step {step_index}: computing the property values and/or assign it to the shell particles")
         property = "bfactor" if tomap == "binding_sites" else tomap
-        reslist, partlist_outfile = run_particles_mapping(shell=shell, pdb=params.pdbarg, tomap=property,
-                                                          outdir=params.outdir, res=params.resfile, electrostatics_mask=params.electrostatics_mask,)
+        reslist, partlist_outfile = run_particles_mapping(
+            shell=shell,
+            pdb=params.pdbarg,
+            tomap=property,
+            outdir=params.outdir,
+            res=params.resfile,
+            electrostatics_mask=params.electrostatics_mask,
+            reference_shell=reference_shell,
+            write_mapped_shell_pdb=getattr(
+                params,
+                "write_shell_pdb",
+                getattr(params, "write_mapped_shell_pdb", False),
+            ),
+        )
         junk_optional.add(element=[reslist, partlist_outfile])
 
         step_index += 1
