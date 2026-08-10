@@ -63,7 +63,6 @@ smoother_adj <- function(row, datamat) {
 
 # Smooth the cell given in argument. version non smoothed (ie cell value is not averaged with neighbouring cells)
 smoother_raw <- function(row, datamat) {
-
   abs = as.double(row[1])/width
   ord = as.double(row[2])/height
   if (!is.na(row[3]) && as.double(row[3]) <= MASKED_SENTINEL) {
@@ -77,7 +76,7 @@ smoother_raw <- function(row, datamat) {
                   datamat[abs*stepord+ord,3],datamat[abs*stepord+ord+1,3])
     if (Inf %in% adj_cells) { # test if cell is in the border of the projection.
       # If the cell is in the border of the projection it does not have 8 neighbors. We consider the cell as outside value.
-      smoothed_value = Inf
+      smoothed_value = Inf # border one layer of the map
     } else if (is.na(row[3]) == TRUE) { # The only case where the value of the cell is modified. We assign the most seen value in the neighbors.
       # Actual smoothing of the cell (ignoring NA values. Rk: for energy maps we considered NA as 0 values).
       adj_cells = as.double(adj_cells)
@@ -96,7 +95,7 @@ smoother_raw <- function(row, datamat) {
       smoothed_value = row[3]
     }
   } else {
-    smoothed_value = Inf
+    smoothed_value = Inf #border one layer of the map
   }
 }
 
@@ -137,7 +136,10 @@ findproj <- function(row) {
   # If phi is not included in (-pi, pi) that means the cell is outside the projection. 
   # (phi E (-pi,pi) and theta E (-pi/2, pi/2) is sufficient to describe all possible coordinate on a sphere). Here theta always belongs to (-pi/2,pi/2) so we only test phi.
   if (findInterval(phi, c(-pi, pi)) != 1){
-    row[3] = Inf
+    #print(row)
+    #print("...")
+    row[3] = Inf #row[3] = 2 pixel values from background
+
   }
 
   return(as.double(row[3]))
