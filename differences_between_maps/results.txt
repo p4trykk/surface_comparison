@@ -1,0 +1,122 @@
+NORMALIZED MAPS
+difference (0.5 to 3.5):
+
+TOP largest difference (0.5 to 3.5):
+No.   Protein                                   Radius Pair   Diff (%)  
+......................................................................
+1     tt_NylC_AF3_4rev_aligned_map_clean_rad    0.5 -> 3.5    12.36%
+2     nc_NylC_AF3_4rev_aligned_map_clean_rad    0.5 -> 3.5    12.31%
+3     1WYC_NylB_4rev_aligned_map_clean_rad      0.5 -> 3.5    12.26%
+4     ph_NylC_AF3_4rev_aligned_map_clean_rad    0.5 -> 3.5    12.20%
+5     GatA_AF3_4rev_aligned_map_clean_rad       0.5 -> 3.5    12.09%
+6     TvgC_AF3_4rev_aligned_map_clean_rad       0.5 -> 3.5    12.05%
+7     5XYG_nylcp2_4rev_aligned_map_clean_rad    0.5 -> 3.5    11.96%
+8     5Y0M_nylcp2_TS_4rev_aligned_map_clean_rad 0.5 -> 3.5    11.95%
+9     Ooh_AF3_4rev_aligned_map_clean_rad        0.5 -> 3.5    11.85%
+10    afnitB_AF3_4rev_aligned_map_clean_rad     0.5 -> 3.5    11.84%
+
+TOP smallest difference (0.5 to 3.5):
+No.   Protein                                   Radius Pair   Diff (%)  
+......................................................................
+1     BcC_AF3_4rev_aligned_map_clean_rad        0.5 -> 3.5    9.43%
+2     1CRL_lipCr_4rev_aligned_bfactor_map_clean 0.5 -> 3.5    9.52%
+3     Thccut1_AF3_4rev_aligned_map_clean_rad    0.5 -> 3.5    9.58%
+4     6THT_LCC_ICCG_4rev_aligned_map_clean_rad  0.5 -> 3.5    9.82%
+5     4OYY_hic_4rev_aligned_bfactor_map_clean   0.5 -> 3.5    9.85%
+6     1TPO_tryp_4rev_aligned_map_clean_rad      0.5 -> 3.5    9.87%
+7     3GBS_aoc_4rev_aligned_map_clean_rad       0.5 -> 3.5    9.95%
+8     4EB0_LCC_4rev_aligned_map_clean_rad       0.5 -> 3.5    9.97%
+9     Thccut2_AF3_4rev_aligned_map_clean_rad    0.5 -> 3.5    10.03%
+10    1SBC_sub_4rev_aligned_map_clean_rad       0.5 -> 3.5    10.26%
+
+step changes difference:
+
+TOP largest step difference:
+No.   Protein                                   Step Pair     Diff (%)  
+......................................................................
+1     1WYC_NylB_4rev_aligned_map_clean_rad      0.5 -> 1.0    6.01%
+2     Ooh_AF3_4rev_aligned_map_clean_rad        0.5 -> 1.0    5.76%
+3     GatA_AF3_4rev_aligned_map_clean_rad       0.5 -> 1.0    5.63%
+4     nc_NylC_AF3_4rev_aligned_map_clean_rad    0.5 -> 1.0    5.48%
+5     ReU_AF3_4rev_aligned_map_clean_rad        0.5 -> 1.0    5.47%
+6     NfpolyA_AF3_4rev_aligned_map_clean_rad    0.5 -> 1.0    5.45%
+7     TvgC_AF3_4rev_aligned_map_clean_rad       0.5 -> 1.0    5.43%
+8     UMGSP1_AF3_4rev_aligned_map_clean_rad     0.5 -> 1.0    5.42%
+9     5D8M_MGS0156_4rev_aligned_map_clean_rad   1.0 -> 1.5    5.37%
+10    TtA_AF3_4rev_aligned_map_clean_rad        0.5 -> 1.0    5.35%
+
+TOP smallest step difference: 
+No.   Protein                                   Step Pair     Diff (%)  
+......................................................................
+1     1TPO_tryp_4rev_aligned_map_clean_rad      3.0 -> 3.5    2.40%
+2     BcC_AF3_4rev_aligned_map_clean_rad        3.0 -> 3.5    2.44%
+3     4OYY_hic_4rev_aligned_bfactor_map_clean   3.0 -> 3.5    2.45%
+4     Thccut1_AF3_4rev_aligned_map_clean_rad    3.0 -> 3.5    2.46%
+5     1CEX_cutfv_4rev_aligned_map_clean_rad     3.0 -> 3.5    2.52%
+6     Thccut1_AF3_4rev_aligned_map_clean_rad    2.5 -> 3.0    2.54%
+7     1CRL_lipCr_4rev_aligned_bfactor_map_clean 3.0 -> 3.5    2.60%
+8     Thccut2_AF3_4rev_aligned_map_clean_rad    3.0 -> 3.5    2.63%
+9     1PPN_pap_4rev_aligned_map_clean_rad       3.0 -> 3.5    2.66%
+10    6QGC_PETase_4rev_aligned_map_clean_rad    3.0 -> 3.5    2.69%
+
+
+UNNORMALIZED MAPS (without normalization during map generation)
+difference (0.5 to 3.5):
+
+TOP largest difference (0.5 to 3.5):
+No.   Protein                                   Radius Pair   Diff (%)  
+......................................................................
+1     1CRL_lipCr_4rev_aligned_bfactor_map_clean 0.5 -> 3.5    20.59%
+2     1SBC_sub_4rev_aligned_map_clean_rad       0.5 -> 3.5    16.90%
+3     tt_NylC_AF3_4rev_aligned_map_clean_rad    0.5 -> 3.5    12.91%
+4     TtA_AF3_4rev_aligned_map_clean_rad        0.5 -> 3.5    12.73%
+5     ph_NylC_AF3_4rev_aligned_map_clean_rad    0.5 -> 3.5    12.70%
+6     nc_NylC_AF3_4rev_aligned_map_clean_rad    0.5 -> 3.5    12.68%
+7     5XYG_nylcp2_4rev_aligned_map_clean_rad    0.5 -> 3.5    12.39%
+8     5Y0M_nylcp2_TS_4rev_aligned_map_clean_rad 0.5 -> 3.5    12.35%
+9     TvgC_AF3_4rev_aligned_map_clean_rad       0.5 -> 3.5    12.33%
+10    afnitB_AF3_4rev_aligned_map_clean_rad     0.5 -> 3.5    12.28%
+
+TOP smallest difference (0.5 to 3.5):
+No.   Protein                                   Radius Pair   Diff (%)  
+......................................................................
+1     BcC_AF3_4rev_aligned_map_clean_rad        0.5 -> 3.5    9.18%
+2     Thccut1_AF3_4rev_aligned_map_clean_rad    0.5 -> 3.5    9.49%
+3     1TPO_tryp_4rev_aligned_map_clean_rad      0.5 -> 3.5    9.82%
+4     4OYY_hic_4rev_aligned_bfactor_map_clean   0.5 -> 3.5    10.09%
+5     6THT_LCC_ICCG_4rev_aligned_map_clean_rad  0.5 -> 3.5    10.11%
+6     4EB0_LCC_4rev_aligned_map_clean_rad       0.5 -> 3.5    10.16%
+7     Thccut2_AF3_4rev_aligned_map_clean_rad    0.5 -> 3.5    10.27%
+8     3GBS_aoc_4rev_aligned_map_clean_rad       0.5 -> 3.5    10.31%
+9     1CUS_fsc_4rev_aligned_map_clean_rad       0.5 -> 3.5    10.36%
+10    6QGC_PETase_4rev_aligned_map_clean_rad    0.5 -> 3.5    10.51%
+
+step changes difference:
+
+TOP largest step difference:
+No.   Protein                                   Step Pair     Diff (%)  
+......................................................................
+1     1CRL_lipCr_4rev_aligned_bfactor_map_clean 3.0 -> 3.5    19.04%
+2     1SBC_sub_4rev_aligned_map_clean_rad       3.0 -> 3.5    14.39%
+3     1CRL_lipCr_4rev_aligned_bfactor_map_clean 2.0 -> 2.5    6.95%
+4     Ooh_AF3_4rev_aligned_map_clean_rad        0.5 -> 1.0    6.86%
+5     1CRL_lipCr_4rev_aligned_bfactor_map_clean 1.5 -> 2.0    6.69%
+6     9DYS_Nyl50_4rev_aligned_map_clean_rad     1.5 -> 2.0    6.66%
+7     5D8M_MGS0156_4rev_aligned_map_clean_rad   1.0 -> 1.5    6.49%
+8     5Y0M_nylcp2_TS_4rev_aligned_map_clean_rad 1.0 -> 1.5    6.39%
+9     MsmegA_AF3_4rev_aligned_map_clean_rad     2.0 -> 2.5    6.38%
+10    Ooh_AF3_4rev_aligned_map_clean_rad        1.5 -> 2.0    6.32%
+
+TOP smallest step difference: 
+No.   Protein                                   Step Pair     Diff (%)  
+......................................................................
+1     BcC_AF3_4rev_aligned_map_clean_rad        3.0 -> 3.5    2.41%
+2     1TPO_tryp_4rev_aligned_map_clean_rad      3.0 -> 3.5    2.42%
+3     1CEX_cutfv_4rev_aligned_map_clean_rad     3.0 -> 3.5    2.45%
+4     Thccut1_AF3_4rev_aligned_map_clean_rad    3.0 -> 3.5    2.46%
+5     Thccut1_AF3_4rev_aligned_map_clean_rad    2.5 -> 3.0    2.53%
+6     1CEX_cutfv_4rev_aligned_map_clean_rad     2.5 -> 3.0    2.66%
+7     3TGL_LipRM_4rev_aligned_map_clean_rad     2.5 -> 3.0    2.70%
+8     1PPN_pap_4rev_aligned_map_clean_rad       3.0 -> 3.5    2.72%
+9     6QGC_PETase_4rev_aligned_map_clean_rad    3.0 -> 3.5    2.75%
+10    4WFJ_Cut190_4rev_aligned_map_clean_rad    3.0 -> 3.5    2.76%
