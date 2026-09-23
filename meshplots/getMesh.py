@@ -27,9 +27,6 @@ def parseShellFile(pathToFolder: str) -> pd.DataFrame:
     return df1
 
 
-
-import numpy as np
-
 def plane_mesh_from_points(x, y, z, margin=0.1, n=30):
     """
     Fit a plane to scattered 3D points and return a Plotly-ready mesh grid.
@@ -147,7 +144,7 @@ def makeFirstPlane(pointsArr:np.ndarray, vector=None) -> Plane:
     if len(pointsArr) >= 3:
         return Plane.best_fit(pointsArr)
 
-    elif len(pointsArr) == 1 and vector != None:
+    elif len(pointsArr) == 1 and vector is not None:
         return Plane(pointsArr[0], vector)
 
 
@@ -341,30 +338,22 @@ def computeAllDihedrals():
         else :
             iterator += 1
 
+def getRaytracedVerticies(verticiesCoordFilePath:str, offFilePath:str, plane: Plane, raySamplingResolution:int=30) -> pd.DataFrame:
 
-def raytracing(offFilePath=None):
-    file = '/home/bob/PyCharmMiscProject/surface_comparison/meshplots/xyzFiles/1CEX_cutfv_4rev_aligned.off'
-    mesh = trimesh.load_mesh(file)
-    # trimesh.Scene(mesh).show()
-
-    pathToFolder = '/home/bob/PyCharmMiscProject/surface_comparison/scripts_and_data/output_fixedNEW_PROTEIN_SET/output_SURFMAP_1CEX_cutfv_4rev_aligned_bfactor'
-    alignPoint = [-25.77, 1.56, -0.93]
-    df1 = parseShellFile(str(pathToFolder))
-
-    plane = makeFirstPlane([[df1['x'].mean(),df1['y'].mean(),df1['z'].mean()]], alignPoint)
-
-    plane = movePlaneToFurthestPoint(plane, df1)
-
-    a,b,c,d = plane.cartesian()
-    rayx,rayy,rayz = plane_points(a,b,c,d, size=100, res=110)
+    df1 = parseShellFile(str(verticiesCoordFilePath))
+    mesh = trimesh.load_mesh(offFilePath)
+    intersector = RayMeshIntersector(mesh)
     rayDirection = plane.normal * -1
 
-
-    intersector = RayMeshIntersector(mesh)
+    proteinSize = round(np.linalg.norm(mesh.extents))
+    a,b,c,d = plane.cartesian()
+    rayx,rayy,rayz = plane_points(a,b,c,d, size=proteinSize, res=proteinSize * raySamplingResolution)
     rayCoords = [[x,y,z] for x,y,z in zip(rayx,rayy,rayz)]
     dirList = [rayDirection for i in range(len(rayCoords))]
 
-    faces = intersector.intersects_first(ray_origins=rayCoords, ray_directions=dirList)
+
+    faces = intersector.intersects_first(
+        ray_origins=rayCoords, ray_directions=dirList)
     faces = pd.Series(faces)[faces >= 1]
     meshdict = mesh.to_dict()
 
@@ -373,19 +362,62 @@ def raytracing(offFilePath=None):
     for hit in faces.values.tolist():
         verticeID += meshdict['faces'][hit]
 
-
     verticeID = pd.Series(verticeID).unique().tolist()
-
     df2 = df1.iloc[verticeID]
 
 
-    x,y,z = plane_mesh_from_points(rayx, rayy, rayz)
+    # visualize intersection between face and ray
+
+    mesh.unmerge_vertices()
+    for id in faces.values.tolist():
+        mesh.visual.face_colors[id] = [255,0,0,255]
+
+
+    trimesh.Scene(mesh).show()
+
+
+    return df2
+
+
+def raytracingExample(offFilePath:str, csvFilePath:str):
+
+    alignPoint = [-25.77, 1.56, -0.93]
+    df1 = parseShellFile(str(csvFilePath))
+
+    plane = makeFirstPlane([[df1['x'].mean(),df1['y'].mean(),df1['z'].mean()]], alignPoint)
+    plane = movePlaneToFurthestPoint(plane, df1)
+
+    a,b,c,d = plane.cartesian()
+    x,y,z = plane_points(a,b,c,d, size=20)
+
+    df2 = getRaytracedVerticies(csvFilePath, offFilePath, plane)
+
+    plane2 = makeFirstPlane(df2.values.tolist())
+    newNormal = (plane2.normal)*-1
+    point = plane2.point
+    plane2 = makeFirstPlane([point], newNormal)
+    plane2 = movePlaneToFurthestPoint(plane2, df1)
+
+    localCoords = getPointPlaneCoordinates(plane2, df2)
+
+    df2['distanceToPlane'] = [plane2.distance_point(vert) for vert in df2.values.tolist()]
+
+    a2,b2,c2,d2 = plane2.cartesian()
+    x2,y2,z2 = plane_points(a2,b2,c2,d2, size=20)
+
+    x,y,z = plane_mesh_from_points(x, y, z)
     fig = px.scatter_3d(df1, x='x',y='y',z='z', title='Ray Direction')
-    fig.add_trace(go.Scatter3d(x=df2['x'],y=df2['y'],z=df2['z'], mode='markers'))
+    fig.add_trace(go.Scatter3d(x=df2['x'],y=df2['y'],z=df2['z'], marker_color=df2['distanceToPlane'], mode='markers'))
     fig.add_trace(go.Surface(x=x,y=y,z=z, showscale=False, name='Ray Direction'))
-    fig.add_trace(go.Scatter3d(x=rayx,y=rayy,z=rayz, mode='markers'))
+    fig.add_trace(go.Scatter3d(x=x2,y=y2,z=z2))
     fig.show()
 
+    print(np.degrees(computeDihedral(plane, plane2)))
+
+    twodfig = (px.scatter(pd.DataFrame(
+        {'x': localCoords['x'], 'y': localCoords['y'], 'distanceToPlane': df2["distanceToPlane"].to_list()}), x='x',
+                          y='y', color='distanceToPlane'))
+    twodfig.show()
 
 
 def makeOFFfile(xyzPath:str, facePath:str, outputPath:str) -> None:
@@ -434,8 +466,10 @@ if __name__ == "__main__":
     facefile = '/home/bob/PyCharmMiscProject/surface_comparison/scripts_and_data/output_fixedNEW_PROTEIN_SET/output_SURFMAP_1CEX_cutfv_4rev_aligned_bfactor/shells/1CEX_cutfv_4rev_aligned.face'
     makeOFFfile(xyzfile, facefile, '/home/bob/PyCharmMiscProject/surface_comparison/meshplots/xyzFiles')
     offFile = '/home/bob/PyCharmMiscProject/surface_comparison/meshplots/xyzFiles/1CEX_cutfv_4rev_aligned.off'
+    csvPath = '/home/bob/PyCharmMiscProject/surface_comparison/scripts_and_data/output_fixedNEW_PROTEIN_SET/output_SURFMAP_1CEX_cutfv_4rev_aligned_bfactor'
 
-    raytracing(offFile)
+
+    raytracingExample(offFile, csvPath)
 
 
 
