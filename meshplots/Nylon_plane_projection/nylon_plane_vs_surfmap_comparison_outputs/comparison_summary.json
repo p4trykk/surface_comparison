@@ -1,0 +1,41 @@
+{
+  "global_geometry": {
+    "matched_points": 6148,
+    "matching_coverage_pct": 100.0,
+    "max_xyz_match_error_A": 0.0,
+    "alignment_type": "rotation",
+    "alignment_detR": 1.0000000000000002,
+    "alignment_rotation_angle_deg": -89.026824790831,
+    "alignment_uniform_scale": 0.36477116259494896,
+    "global_RMS_error_A": 15.286261175965159,
+    "global_P95_error_A": 24.7759644484104,
+    "global_max_error_A": 37.495154791567295,
+    "global_NRMS_RMSradius_pct": 58.58796442502555,
+    "global_NRMS_bboxdiag_pct": 17.66614620518428,
+    "procrustes_disparity": 0.3432549575468059
+  },
+  "quantization": {
+    "integer_coordinate_fraction_pct": 100.0,
+    "unique_SURFMAP_positions": 1972,
+    "matched_points": 6148,
+    "unique_position_fraction_pct": 32.075471698113205,
+    "points_in_shared_positions_pct": 91.93233571893299,
+    "max_position_multiplicity": 21,
+    "smallest_raw_coordinate_step": 2.0,
+    "effective_grid_step_A": 0.7295423251898979
+  },
+  "charge": {
+    "charge_value_pearson": 0.9999999999999999,
+    "charge_value_max_identity_difference": 0.0,
+    "charge_weighted_RMS_displacement_A": 15.242671740639944,
+    "positive_charge_centroid_shift_A": 1.3776927409633006,
+    "negative_charge_centroid_shift_A": 0.9926236993031919
+  },
+  "inputs": {
+    "plane_points_csv": "/home/chiara/Desktop/COMENZE/Comenze_pipeline/Nylon_surface/Nylon_plane_projection/nylon_planar_projection_corrected/nylon_planar_projection_points.csv",
+    "plane_metadata_json": "/home/chiara/Desktop/COMENZE/Comenze_pipeline/Nylon_surface/Nylon_plane_projection/nylon_planar_projection_corrected/nylon_planar_projection_metadata.json",
+    "surfmap_coord_list": "/home/chiara/Desktop/COMENZE/Comenze_pipeline/Nylon_surface/Nylon_surfmap/Nyl_rad0.5_s2_nosmooth/output_SURFMAP_NYL_newVer_rotY90resnum_bfactor/coord_lists/NYL_newVer_rotY90resnum_bfactor_coord_list.txt",
+    "surfmap_shell_pdb": "/home/chiara/Desktop/COMENZE/Comenze_pipeline/Nylon_surface/Nylon_surfmap/Nyl_rad0.5_s2_nosmooth/output_SURFMAP_NYL_newVer_rotY90resnum_bfactor/NYL_newVer_rotY90resnum_bfactor_mapped_shell.pdb",
+    "index_offset": 1
+  }
+}
